@@ -370,7 +370,8 @@ test("renders focused shopping controls and keeps secondary actions available", 
   assert.match(html, /aria-labelledby="shopping-section-w1-meat-fish"/);
   assert.match(html, /Show remaining only/);
   assert.match(html, /Move .+ to another category/);
-  assert.match(html, /Estimated shop/);
+  assert.match(html, /Shop total/);
+  assert.doesNotMatch(html, /Estimated shop|Basket summary|Batch cost/);
   assert.match(html, /More shopping actions/);
 });
 

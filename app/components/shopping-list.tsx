@@ -222,7 +222,7 @@ export function ShoppingList({
 
       {extraFormOpen ? (
         <form className="extra-shopping-form" onSubmit={submitExtra}>
-          <div className="extra-shopping-form-heading"><strong>{editingId ? "Edit extra item" : "Add something to this shop"}</strong><span>Extras are included in this week&apos;s planner and estimate.</span>{extraError ? <p id={`extra-shopping-error-w${week.number}`} className="form-error" role="alert">{extraError}</p> : null}</div>
+          <div className="extra-shopping-form-heading"><strong>{editingId ? "Edit extra item" : "Add something to this shop"}</strong><span>Extras count towards this week&apos;s shop total.</span>{extraError ? <p id={`extra-shopping-error-w${week.number}`} className="form-error" role="alert">{extraError}</p> : null}</div>
           <label htmlFor={`extra-name-w${week.number}`}>Item<input ref={extraNameRef} id={`extra-name-w${week.number}`} value={extraName} onChange={(event) => setExtraName(event.target.value)} placeholder="e.g. Lunchbox fruit" required aria-invalid={extraErrorField === "name" || undefined} aria-describedby={extraError ? `extra-shopping-error-w${week.number}` : undefined} /></label>
           <label htmlFor={`extra-amount-w${week.number}`}>Amount<input id={`extra-amount-w${week.number}`} value={extraAmount} onChange={(event) => setExtraAmount(event.target.value)} placeholder="e.g. 6 pieces" /></label>
           <label htmlFor={`extra-price-w${week.number}`}>Price<input ref={extraPriceRef} id={`extra-price-w${week.number}`} inputMode="decimal" value={extraPrice} onChange={(event) => setExtraPrice(event.target.value)} placeholder="£0.00" disabled={extraCarriedForward} aria-invalid={extraErrorField === "price" || undefined} aria-describedby={extraError ? `extra-shopping-error-w${week.number}` : undefined} /></label>
@@ -295,7 +295,7 @@ export function ShoppingList({
           )}
         </div>
 
-        <section className={`basket-summary${basketOpen ? " is-open" : ""}`} aria-label="Basket summary">
+        <section className={`basket-summary${basketOpen ? " is-open" : ""}`} aria-label="Shop total">
           <button type="button" className="basket-summary-toggle" aria-expanded={basketOpen} aria-controls={`basket-summary-details-w${week.number}`} onClick={() => setBasketOpen((open) => !open)}>
             <span>{pickedCount} of {allItems.length} picked</span>
             <strong>{money.format(estimatedCheckoutTotal)}</strong>
@@ -303,7 +303,7 @@ export function ShoppingList({
           <div className="basket-summary-details" id={`basket-summary-details-w${week.number}`}>
             <div className="summary-icon"><ListChecks aria-hidden="true" /></div>
             <strong>{money.format(estimatedCheckoutTotal)}</strong>
-            <p>Estimated shop: complete packs plus priced extras.</p>
+            <p>Shop total: complete packs plus priced extras.</p>
             {unknownExtras.length ? <p className="summary-warning" role="status">{unknownExtras.length} extra {unknownExtras.length === 1 ? "item needs" : "items need"} a price.</p> : null}
             <div className="summary-rule" />
             <span><CirclePoundSterling aria-hidden="true" />{money.format(estimatedBufferedTotal)} with 10% allowance</span>

@@ -116,7 +116,7 @@ export function FreshnessPanel({
   };
 
   const blockingIssues = evaluation.issues.filter((issue) => issue.severity === "error");
-  const missingLotCount = evaluation.issues.filter((issue) => issue.code === "missing-lot").length;
+  const missingDinnerCount = new Set(evaluation.issues.filter((issue) => issue.code === "missing-lot").map((issue) => issue.recipeId)).size;
   const expectedPacks = options.reduce((total, option) => total + Math.max(1, Math.round(option.defaultQuantity / option.packQuantity)), 0);
 
   if (!options.length) return null;
@@ -130,14 +130,14 @@ export function FreshnessPanel({
       </summary>
       <div className="freshness-heading">
         <div>
-          <p>Record each fresh or chilled meat pack separately. The optimiser allocates measured recipe quantities from the earliest-expiring pack first.</p>
+          <p>Add the use-by date from each meat pack and we&apos;ll put the dinners in a safe order.</p>
         </div>
         <button type="button" className="button button-secondary freshness-add" onClick={() => { setFormOpen((open) => !open); setFormError(""); }} disabled={!options.length}>
           <PackagePlus aria-hidden="true" />{formOpen ? "Close" : "Add a pack"}
         </button>
       </div>
 
-      <p className="freshness-week-note">Week {week.number} · {readableDate(weekStartISO)} start. A pack can be used from its purchase date through its use-by date; partial packs are allocated as they are used.</p>
+      <p className="freshness-week-note">Week {week.number} starts {readableDate(weekStartISO)}. A pack can be used from the day you buy it until its use-by date.</p>
 
       {formOpen ? (
         <form className="freshness-form" onSubmit={submitLot}>
@@ -171,7 +171,7 @@ export function FreshnessPanel({
           })}
         </div>
       ) : (
-        <div className="freshness-empty"><strong>No pack dates recorded yet.</strong><span>Add every fresh/chilled meat pack you bought to unlock safe scheduling.</span></div>
+        <div className="freshness-empty"><strong>No packs added yet.</strong><span>Add each meat or fish pack when you unpack the shop.</span></div>
       )}
 
       {blockingIssues.length ? (
@@ -181,12 +181,12 @@ export function FreshnessPanel({
           <ul>{blockingIssues.map((issue, index) => <li key={`${issue.recipeId ?? "issue"}-${issue.productId ?? "product"}-${index}`}>{issue.message}</li>)}</ul>
         </div>
       ) : null}
-      {missingLotCount ? <p className="freshness-missing" role="status">{missingLotCount} recipe {missingLotCount === 1 ? "use still needs" : "uses still need"} a dated pack. The current optimisation covers the recorded packs only.</p> : null}
+      {missingDinnerCount ? <p className="freshness-missing" role="status">{missingDinnerCount} {missingDinnerCount === 1 ? "dinner still needs" : "dinners still need"} a pack date.</p> : null}
 
       {lots.length ? (
         <div className="freshness-actions">
-          <button type="button" className="button button-primary" onClick={onOptimise}>Optimise this week</button>
-          <span>{evaluation.feasible ? "All recorded pack quantities fit the current order." : "The optimiser will keep cooked dinners fixed and look for a safe order."}</span>
+          <button type="button" className="button button-primary" onClick={onOptimise}>Reorder for use-by dates</button>
+          <span>{evaluation.feasible ? "Every dinner fits its pack dates." : "Reordering keeps cooked dinners where they are."}</span>
         </div>
       ) : null}
     </details>

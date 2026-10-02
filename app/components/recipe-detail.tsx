@@ -95,7 +95,7 @@ export function RecipeDetail({
       </div>
       <div className="recipe-detail-header">
         <span className="recipe-day-label">{displayDay}</span>
-        <span className="recipe-cost"><small>Batch cost</small>{money.format(recipe.cost)}</span>
+        <span className="recipe-cost"><small>Dinner cost</small>{money.format(recipe.cost)}</span>
         <h3 id={titleId}>{recipe.name}</h3>
         <p>{recipe.description}</p>
         <div className="recipe-actions" aria-label="Recipe actions">
@@ -190,7 +190,7 @@ export function RecipeDetail({
         {recipe.costBreakdown?.length ? (
           <details className="cost-breakdown">
             <summary>
-              <span><Info aria-hidden="true" />How this batch cost is calculated</span>
+              <span><Info aria-hidden="true" />How the dinner cost is worked out</span>
               <strong>{money.format(recipe.cost)}</strong>
             </summary>
             <div className="cost-breakdown-content">
@@ -211,7 +211,7 @@ export function RecipeDetail({
                       </tr>
                     ))}
                   </tbody>
-                  <tfoot><tr><th scope="row" colSpan={4}>Batch cost</th><td>{money.format(recipe.cost)}</td></tr></tfoot>
+                  <tfoot><tr><th scope="row" colSpan={4}>Dinner cost</th><td>{money.format(recipe.cost)}</td></tr></tfoot>
                 </table>
               </div>
               {recipe.costNote && <p className="cost-estimate-note"><strong>{recipe.costStatus === "estimated" ? "Estimated line:" : "Costing note:"}</strong> {recipe.costNote}</p>}
@@ -238,7 +238,7 @@ export function RecipeDetail({
               </div>
             ))}
           </div>
-          <p className="calorie-note">Weights below are cooked or served estimates unless an item is counted; brands and cooking losses will change the figures.</p>
+          <p className="calorie-note">Weights above are cooked or served estimates unless an item is counted; brands and cooking losses will change them.</p>
         </section>
         <div className="cook-note" role="note">
           <ChefHat aria-hidden="true" />

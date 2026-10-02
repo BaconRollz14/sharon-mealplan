@@ -18,7 +18,7 @@ export function WeekSelector({ weeks, activeIndex, onChange }: WeekSelectorProps
             <button key={week.number} type="button" className="week-tab" aria-pressed={index === activeIndex} onClick={() => onChange(index)}>
               <span>Week {week.number}</span>
               <strong>{shortWeekTitles[week.number]}</strong>
-              <small>{money.format(week.checkoutTotal)} basket estimate</small>
+              <small>{money.format(week.checkoutTotal)} shop</small>
             </button>
           ))}
         </div>

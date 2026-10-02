@@ -464,19 +464,19 @@ export function applyMorrisonsPricing(base: Cookbook, catalog: MorrisonsProductC
     const checkoutTotal = sumShopping(shopping);
     const weekCopy = {
       1: {
-        caption: "Fresh and chilled ingredients for the first week, with unopened frozen and cupboard items available later.",
+        caption: "Fresh food first; frozen and cupboard items keep for later weeks.",
         carryForward: "Keep unopened frozen, canned, dry and cupboard ingredients for later weeks; buy fresh and chilled ingredients again when needed.",
       },
       2: {
-        caption: "Fresh and chilled ingredients are bought again for this week; unopened frozen and cupboard items can carry forward.",
+        caption: "A fresh shop again; frozen and cupboard items carry forward.",
         carryForward: "Keep unopened frozen, canned, dry and cupboard ingredients for later weeks; buy fresh and chilled ingredients again when needed.",
       },
       3: {
-        caption: "Fresh and chilled ingredients are bought again for this week, including the roast allocation used by the planned risotto.",
+        caption: "A fresh shop again, including the roast chicken that carries into the risotto.",
         carryForward: "Keep unopened frozen, canned, dry and cupboard ingredients for Week 4; the roast and risotto chicken allocation are costed within this Week 3 plan.",
       },
       4: {
-        caption: "Fresh and chilled ingredients are bought again for the final week; unopened frozen and cupboard items may remain afterwards.",
+        caption: "The last fresh shop; some frozen and cupboard items may be left over.",
         carryForward: "Fresh and chilled ingredients are covered by the Week 4 shop; unopened frozen, canned, dry and cupboard items may remain after the plan.",
       },
     }[week.number as 1 | 2 | 3 | 4];

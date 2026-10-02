@@ -201,7 +201,7 @@ function issueForMissingLot(recipe: Recipe, use: RecipeUse, quantity: number): S
     productName: product.name,
     quantity,
     unit: product.unit,
-    message: `Enter a use-by date for a ${product.name} pack before optimising ${recipe.name}.`,
+    message: `Enter a use-by date for a ${product.name} pack before reordering around ${recipe.name}.`,
   };
 }
 

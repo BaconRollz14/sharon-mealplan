@@ -602,7 +602,7 @@ export function PlannerClient() {
     setActiveView("shopping");
     setSelectedRecipeId(null);
     setCookingMode(false);
-    setStatusMessage("Use-by dates are ready in the Week shopping view.");
+    setStatusMessage("Use-by dates are open below the shopping list.");
   };
 
   const changeWeek = (index: number) => {
@@ -784,7 +784,7 @@ export function PlannerClient() {
       ...current,
       [activeWeekInstanceKey]: (current[activeWeekInstanceKey] ?? []).filter((lot) => lot.id !== lotId),
     }));
-    setStatusMessage("Pack removed from the freshness planner.");
+    setStatusMessage("Pack removed.");
   };
 
   const optimiseActiveWeek = () => {
@@ -828,7 +828,7 @@ export function PlannerClient() {
     const evaluation = validateSchedule({ week: activeWeek, weekStartISO: activeWeekInstanceKey, order: currentOrder, lots: activeFreshnessLots });
     if (hasExpiryConflict(evaluation)) {
       setPendingMealMove({ order: currentOrder, evaluation });
-      setStatusMessage("That move would put a dinner outside a recorded pack window. Review the warning before continuing.");
+      setStatusMessage("That move clashes with a use-by date. Check the warning before carrying on.");
       return;
     }
     storeMealOrder(currentOrder);
@@ -925,15 +925,15 @@ export function PlannerClient() {
       {activeFreshnessLots.length && activeExpiryConflict && !pendingMealMove ? (
         <aside className="freshness-warning" role="alert" aria-labelledby="freshness-conflict-title">
           <ShieldAlert aria-hidden="true" />
-          <div><strong id="freshness-conflict-title">Freshness needs attention.</strong><p>{activeFreshnessEvaluation.issues.find((issue) => issue.severity === "error")?.message ?? "One or more dinners do not fit the recorded pack dates or quantities."}</p></div>
-          <div className="freshness-warning-actions"><button type="button" className="button button-primary" onClick={optimiseActiveWeek}>Optimise week</button><button type="button" className="button button-secondary" onClick={openShoppingFreshness}>Review dates</button></div>
+          <div><strong id="freshness-conflict-title">Check the use-by dates.</strong><p>{activeFreshnessEvaluation.issues.find((issue) => issue.severity === "error")?.message ?? "One or more dinners do not fit the recorded pack dates or quantities."}</p></div>
+          <div className="freshness-warning-actions"><button type="button" className="button button-primary" onClick={optimiseActiveWeek}>Reorder for use-by dates</button><button type="button" className="button button-secondary" onClick={openShoppingFreshness}>Review dates</button></div>
         </aside>
       ) : null}
       {pendingMealMove ? (
         <aside className="freshness-warning freshness-move-warning" role="alert" aria-labelledby="move-warning-title" aria-describedby="move-warning-description">
           <ShieldAlert aria-hidden="true" />
-          <div><strong id="move-warning-title">That dinner move needs a freshness check.</strong><p id="move-warning-description">{pendingMealMove.evaluation.issues.find((issue) => issue.severity === "error")?.message ?? "The proposed order needs review."}</p></div>
-          <div className="freshness-warning-actions"><button ref={pendingMoveFirstActionRef} type="button" className="button button-primary" onClick={optimiseActiveWeek}>Optimise week</button><button type="button" className="button button-secondary" onClick={confirmPendingMealMove}>Move anyway</button><button type="button" className="button button-quiet" onClick={cancelPendingMealMove}>Cancel</button></div>
+          <div><strong id="move-warning-title">That move clashes with a use-by date.</strong><p id="move-warning-description">{pendingMealMove.evaluation.issues.find((issue) => issue.severity === "error")?.message ?? "The proposed order needs review."}</p></div>
+          <div className="freshness-warning-actions"><button ref={pendingMoveFirstActionRef} type="button" className="button button-primary" onClick={optimiseActiveWeek}>Reorder for use-by dates</button><button type="button" className="button button-secondary" onClick={confirmPendingMealMove}>Move anyway</button><button type="button" className="button button-quiet" onClick={cancelPendingMealMove}>Cancel</button></div>
         </aside>
       ) : null}
 
@@ -993,8 +993,8 @@ export function PlannerClient() {
                         {mealOrders[activeWeekInstanceKey] && !query ? <DropdownMenuItem onSelect={resetMealOrder}><RotateCcw aria-hidden="true" />Reset order</DropdownMenuItem> : null}
                       </DropdownMenuContent>
                     </DropdownMenu>
-                    <div className="weekly-cost" aria-label={`Week ${activeWeek.number} estimated shop total ${money.format(activeCheckoutTotal)}`}>
-                      <span>Estimated shop</span><strong>{money.format(activeCheckoutTotal)}</strong>
+                    <div className="weekly-cost" aria-label={`Week ${activeWeek.number} shop total ${money.format(activeCheckoutTotal)}`}>
+                      <span>Shop total</span><strong>{money.format(activeCheckoutTotal)}</strong>
                     </div>
                   </>
                 ) : null}
