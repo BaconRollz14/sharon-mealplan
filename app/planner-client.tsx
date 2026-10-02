@@ -300,6 +300,7 @@ export function PlannerClient() {
   const [freshnessLots, setFreshnessLots] = useState<Record<string, PurchasedLot[]>>({});
   const [todayISO, setTodayISO] = useState(() => localTodayISO());
   const [cookingMode, setCookingMode] = useState(false);
+  const [screenAwake, setScreenAwake] = useState(false);
   const [isReordering, setIsReordering] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [hydrated, setHydrated] = useState(false);
@@ -468,6 +469,36 @@ export function PlannerClient() {
   const activeWeekInstanceKey = weekInstanceKeyForCurrentCycle(activeWeekIndex, currentCyclePosition.cycleIndex);
 
   useEffect(() => {
+    // Keep the phone awake at the hob; re-acquire after the tab comes back into view.
+    if (!cookingMode || !selectedRecipeId || typeof navigator === "undefined" || !("wakeLock" in navigator)) return;
+    let lock: WakeLockSentinel | null = null;
+    let cancelled = false;
+    const request = async () => {
+      try {
+        const next = await navigator.wakeLock.request("screen");
+        if (cancelled) {
+          void next.release();
+          return;
+        }
+        lock = next;
+        setScreenAwake(true);
+        next.addEventListener("release", () => { if (!cancelled) setScreenAwake(false); });
+      } catch {
+        setScreenAwake(false);
+      }
+    };
+    const onVisibility = () => { if (document.visibilityState === "visible") void request(); };
+    void request();
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      cancelled = true;
+      document.removeEventListener("visibilitychange", onVisibility);
+      void lock?.release().catch(() => {});
+      setScreenAwake(false);
+    };
+  }, [cookingMode, selectedRecipeId]);
+
+  useEffect(() => {
     if (!pendingMealMove) return;
     const frame = window.requestAnimationFrame(() => pendingMoveFirstActionRef.current?.focus());
     return () => window.cancelAnimationFrame(frame);
@@ -551,6 +582,13 @@ export function PlannerClient() {
   const gridEntries = showTonight && tonightEntry
     ? recipeEntries.filter((entry) => entry.recipe.id !== tonightEntry.recipe.id)
     : recipeEntries;
+
+  const selectedSteps = useMemo(
+    () => new Set((selectedRecipeId ? methodProgress[selectedRecipeId] : undefined) ?? []),
+    [methodProgress, selectedRecipeId],
+  );
+
+  const selectedNextStep = selectedEntry ? selectedEntry.recipe.method.findIndex((_, index) => !selectedSteps.has(index)) : -1;
 
   const activeOrder = useMemo(() => activeMeals.map(({ recipe }) => recipe.id), [activeMeals]);
   const activeFreshnessLots = useMemo(() => freshnessLots[activeWeekInstanceKey] ?? [], [activeWeekInstanceKey, freshnessLots]);
@@ -968,13 +1006,21 @@ export function PlannerClient() {
           <TabsContent value="recipes" className="plan-content recipe-view">
             {selectedEntry ? (
               <section id="recipe-reader" className="recipe-reader" aria-label={`${selectedEntry.recipe.name} recipe`}>
-                <div className="recipe-reader-toolbar">
+                <div className={`recipe-reader-toolbar${cookingMode ? " is-cooking" : ""}`}>
                   <button ref={readerBackRef} type="button" className="button button-secondary recipe-reader-back" onClick={() => closeRecipe(selectedEntry.recipe)}>
-                    <ArrowLeft aria-hidden="true" />Back to meals
+                    <ArrowLeft aria-hidden="true" />{cookingMode ? "Back" : "Back to meals"}
                   </button>
-                  <span>Week {selectedEntry.weekIndex + 1} · {selectedEntry.displayDay} · {readableMealDate(selectedEntry.mealDate)} · Recipe {selectedEntry.recipe.recipeNumber}</span>
+                  {cookingMode ? (
+                    <>
+                      <span className="cooking-progress">{selectedNextStep < 0 ? "All steps done" : `Step ${selectedNextStep + 1} of ${selectedEntry.recipe.method.length}`}</span>
+                      <button type="button" className="button button-secondary" onClick={() => setCookingMode(false)}>Exit</button>
+                    </>
+                  ) : (
+                    <span>Week {selectedEntry.weekIndex + 1} · {selectedEntry.displayDay} · {readableMealDate(selectedEntry.mealDate)}</span>
+                  )}
                 </div>
                 <RecipeDetail
+                  key={selectedEntry.recipe.id}
                   recipe={selectedEntry.recipe}
                   displayDay={selectedEntry.displayDay}
                   titleId="recipe-reader-title"
@@ -985,7 +1031,8 @@ export function PlannerClient() {
                   onToggleCooked={() => toggleSetValue(setCookedRecipeIds, selectedEntry.recipe.id, `${selectedEntry.recipe.name} marked as cooked.`, `${selectedEntry.recipe.name} marked as not cooked.`)}
                   onRate={(rating) => rateMeal(selectedEntry.recipe, rating)}
                   cookingMode={cookingMode}
-                  completedSteps={new Set(methodProgress[selectedEntry.recipe.id] ?? [])}
+                  completedSteps={selectedSteps}
+                  screenAwake={screenAwake}
                   onToggleCookingMode={() => setCookingMode((mode) => !mode)}
                   onToggleStep={(stepIndex) => toggleMethodStep(selectedEntry.recipe.id, stepIndex)}
                 />

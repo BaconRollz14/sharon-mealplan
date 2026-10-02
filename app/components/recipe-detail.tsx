@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   CheckCircle2,
   ChefHat,
@@ -26,6 +27,7 @@ interface RecipeDetailProps {
   completedSteps?: Set<number>;
   onToggleCookingMode?: () => void;
   onToggleStep?: (stepIndex: number) => void;
+  screenAwake?: boolean;
 }
 
 const portionLabels: Record<string, string> = {
@@ -59,11 +61,22 @@ export function RecipeDetail({
   completedSteps = new Set<number>(),
   onToggleCookingMode = () => {},
   onToggleStep = () => {},
+  screenAwake = false,
 }: RecipeDetailProps) {
   const mealImage = getMealImage(recipe.recipeNumber, recipe.name);
+  // Ingredient ticks are a measuring aid for this device only; they are not household state.
+  const [tickedIngredients, setTickedIngredients] = useState<Set<number>>(() => new Set());
+  const nextStep = recipe.method.findIndex((_, index) => !completedSteps.has(index));
+  const allStepsDone = cookingMode && recipe.method.length > 0 && nextStep === -1;
+  const toggleIngredient = (index: number) => setTickedIngredients((current) => {
+    const next = new Set(current);
+    if (next.has(index)) next.delete(index);
+    else next.add(index);
+    return next;
+  });
 
   return (
-    <article className="recipe-detail" aria-labelledby={titleId}>
+    <article className={`recipe-detail${cookingMode ? " is-cooking" : ""}`} aria-labelledby={titleId}>
       <div className="recipe-detail-media">
         <picture>
           {mealImage.srcSet ? <source type="image/webp" srcSet={mealImage.srcSet} sizes="(max-width: 780px) 100vw, 960px" /> : null}
@@ -108,12 +121,14 @@ export function RecipeDetail({
             <ChefHat aria-hidden="true" />{cookingMode ? "Exit cooking mode" : "Cooking mode"}
           </button>
         </div>
-        <MealRating
-          mealName={recipe.name}
-          rating={rating}
-          onRate={onRate}
-          className="recipe-rating-control"
-        />
+        {cookingMode ? null : (
+          <MealRating
+            mealName={recipe.name}
+            rating={rating}
+            onRate={onRate}
+            className="recipe-rating-control"
+          />
+        )}
       </div>
 
       <dl className="recipe-stats">
@@ -124,25 +139,53 @@ export function RecipeDetail({
       <div className="recipe-detail-body">
         <section aria-labelledby={`${titleId}-ingredients`}>
           <h4 id={`${titleId}-ingredients`}>Ingredients</h4>
-          <ul className="ingredients-list">
-            {recipe.ingredients.map((ingredient) => <li key={ingredient}>{ingredient}</li>)}
+          <ul className={`ingredients-list${cookingMode ? " is-cooking-mode" : ""}`}>
+            {recipe.ingredients.map((ingredient, index) => (
+              <li key={ingredient} className={tickedIngredients.has(index) ? "is-complete" : ""}>
+                {cookingMode ? (
+                  <label className="ingredient-check">
+                    <input type="checkbox" checked={tickedIngredients.has(index)} onChange={() => toggleIngredient(index)} />
+                    <span>{ingredient}</span>
+                  </label>
+                ) : ingredient}
+              </li>
+            ))}
           </ul>
         </section>
         <section aria-labelledby={`${titleId}-method`}>
           <h4 id={`${titleId}-method`}>Method</h4>
           <ol className={`method-list${cookingMode ? " is-cooking-mode" : ""}`}>
             {recipe.method.map((step, index) => (
-              <li key={`${recipe.id}-${titleId}-step-${index}`} className={completedSteps.has(index) ? "is-complete" : ""}>
+              <li
+                key={`${recipe.id}-${titleId}-step-${index}`}
+                className={[completedSteps.has(index) ? "is-complete" : "", cookingMode && index === nextStep ? "is-next" : ""].filter(Boolean).join(" ") || undefined}
+                aria-current={cookingMode && index === nextStep ? "step" : undefined}
+              >
                 {cookingMode ? (
                   <label className="method-step-check">
                     <input type="checkbox" checked={completedSteps.has(index)} onChange={() => onToggleStep(index)} />
-                    <span>{step}</span>
+                    <span><span className="method-step-number">Step {index + 1}</span>{step}</span>
                   </label>
                 ) : step}
               </li>
             ))}
           </ol>
-          {cookingMode ? <p className="cooking-mode-hint"><ChefHat aria-hidden="true" />Tick each step as you go. Your place is saved in this browser.</p> : null}
+          {allStepsDone ? (
+            <div className="cooking-finish" role="status">
+              <strong>{isCooked ? "Dinner's done." : "Dinner's up."}</strong>
+              {isCooked ? (
+                <p>Marked as cooked. How did it go?</p>
+              ) : (
+                <button type="button" className="button button-primary" onClick={onToggleCooked}>
+                  <CheckCircle2 aria-hidden="true" />Mark cooked
+                </button>
+              )}
+              <MealRating mealName={recipe.name} rating={rating} onRate={onRate} className="cooking-finish-rating" />
+            </div>
+          ) : null}
+          {cookingMode && !allStepsDone ? (
+            <p className="cooking-mode-hint"><ChefHat aria-hidden="true" />Tick each step as you go; your place is saved in this browser.{screenAwake ? " The screen stays on while you cook." : ""}</p>
+          ) : null}
         </section>
         {recipe.costBreakdown?.length ? (
           <details className="cost-breakdown">

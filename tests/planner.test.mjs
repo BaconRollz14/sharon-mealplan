@@ -420,7 +420,7 @@ test("offers a full-width in-page recipe reader and a wider desktop shell", asyn
   assert.doesNotMatch(html, /Back to meals|>Print</);
   assert.match(html, /role="radiogroup"/);
   assert.match(plannerSource, /id="recipe-reader" className="recipe-reader"/);
-  assert.match(plannerSource, /className="recipe-reader-toolbar"/);
+  assert.match(plannerSource, /className=\{`recipe-reader-toolbar\$\{cookingMode \? " is-cooking" : ""\}`\}/);
   assert.match(plannerSource, /planner\$\{selectedEntry && activeView === "recipes" \? " has-recipe-reader" : ""\}/);
   assert.match(plannerSource, /rating=\{mealRatings\[selectedEntry\.recipe\.id\] \?\? 0\}/);
   assert.match(recipeSource, /recipe-rating-control/);
@@ -777,4 +777,26 @@ test("resets cooking mode whenever the selected recipe changes", async () => {
   assert.match(selectionBlock, /const selectRecipe[\s\S]*?setCookingMode\(false\);[\s\S]*?setSelectedRecipeId/);
   assert.match(selectionBlock, /const closeRecipe[\s\S]*?setSelectedRecipeId\(null\);\s*setCookingMode\(false\);/);
   assert.match(plannerSource, /setCookingMode\(false\);\s*setQuery\(""\);/);
+});
+
+test("makes cooking mode usable at the hob", async () => {
+  const { cookbook } = await vite.ssrLoadModule("/app/cookbook-data.ts");
+  const { RecipeDetail } = await vite.ssrLoadModule("/app/components/recipe-detail.tsx");
+  const plannerSource = await readFile(path.join(root, "app/planner-client.tsx"), "utf8");
+  const recipe = cookbook.weeks[0].meals[3];
+  const render = (completedSteps, isCooked = false) => renderToStaticMarkup(React.createElement(RecipeDetail, {
+    recipe, titleId: "t", isFavourite: false, isCooked, rating: 0, cookingMode: true, completedSteps,
+    onToggleFavourite() {}, onToggleCooked() {}, onRate() {},
+  }));
+
+  const midway = render(new Set([0, 1]));
+  assert.match(midway, /class="is-next" aria-current="step"/);
+  assert.equal((midway.match(/class="ingredient-check"/g) ?? []).length, recipe.ingredients.length);
+  assert.doesNotMatch(midway, /cooking-finish/);
+  const finished = render(new Set(recipe.method.map((_, index) => index)));
+  assert.match(finished, /Dinner&#x27;s up\.[\s\S]*Mark cooked/);
+  assert.match(finished, /role="radiogroup"/);
+  assert.match(render(new Set(recipe.method.map((_, index) => index)), true), /Marked as cooked/);
+  assert.match(plannerSource, /navigator\.wakeLock\.request\("screen"\)/);
+  assert.match(plannerSource, /visibilitychange/);
 });

@@ -33,6 +33,35 @@
   background: var(--surface-tint);
   color: var(--ink);
   font-size: 0.84rem;
+  flex-wrap: wrap;
+}
+
+.view-tabs-list {
+  display: inline-flex;
+  width: auto;
+  height: auto;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+  border-radius: 0;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--line-strong) 48%, transparent);
+  max-width: 100%;
+  flex-wrap: wrap;
+}
+
+.view-tab {
+  gap: 7px;
+  padding: 9px 14px;
+  border: 1px solid transparent;
+  color: var(--ink-muted);
+  font-size: 0.84rem;
+  font-weight: 800;
+  box-shadow: none;
+  min-height: 44px;
+  border-radius: 0;
+  min-width: 0;
+  white-space: normal;
 }
 
 .storage-warning button {
@@ -200,7 +229,6 @@
 }
 
 .week-tab > span,
-.week-tab > strong,
 .week-tab > small {
   color: inherit;
 }
@@ -208,14 +236,6 @@
 .week-tab > span {
   font-size: 0.78rem;
   font-weight: 850;
-}
-
-.week-tab > strong {
-  overflow: hidden;
-  max-width: 100%;
-  font-size: 0.82rem;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .week-tab > small {
@@ -1253,19 +1273,6 @@
 
 @media (max-width: 780px) {
 
-  .theme-control-label {
-    display: none;
-  }
-
-  .theme-control {
-    grid-template-columns: 84px;
-  }
-
-  .theme-switch,
-  .theme-switch-visual {
-    grid-column: 1;
-  }
-
   .cost-table-wrap {
     overflow-x: visible;
   }
@@ -1342,17 +1349,6 @@
     margin-left: auto;
   }
 
-  .recipe-reader-toolbar {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 7px;
-  }
-
-  .recipe-reader-toolbar > span {
-    padding-left: 3px;
-    text-align: left;
-  }
-
   .recipe-reader .recipe-detail-header,
   .recipe-reader .recipe-detail-body {
     padding-right: 20px;
@@ -1381,10 +1377,6 @@
     display: none;
   }
 
-  .shopping-item-move {
-    align-self: center;
-  }
-
   .site-footer {
     flex-direction: column;
     gap: 8px;
@@ -1400,10 +1392,6 @@
     padding-left: 12px;
   }
 
-  .icon-text-button span {
-    display: none;
-  }
-
   .weekly-cost {
     min-width: 116px;
   }
@@ -1412,32 +1400,6 @@
   .recipe-detail-body {
     padding-right: 17px;
     padding-left: 17px;
-  }
-
-  .recipe-detail-header h3 {
-    max-width: 240px;
-    padding-right: 35px;
-    font-size: 1.55rem;
-  }
-
-  .recipe-reader .recipe-detail-header h3 {
-    max-width: none;
-    padding-top: 50px;
-    padding-right: 0;
-  }
-
-  .recipe-cost {
-    top: 16px;
-    right: 15px;
-  }
-
-  .recipe-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .recipe-actions button:last-child {
-    grid-column: 1 / -1;
   }
 
   .recipe-stats {
@@ -1686,16 +1648,6 @@
   flex: 0 0 auto;
 }
 
-.method-list.is-cooking-mode li:has(input:checked) .method-step-check {
-  border-color: color-mix(in srgb, var(--sage) 35%, var(--line));
-  background: var(--sage-soft);
-}
-
-.method-list.is-cooking-mode li:has(input:checked) .method-step-check span {
-  color: var(--ink-muted);
-  text-decoration: line-through;
-}
-
 .cooking-mode-hint {
   display: flex;
   align-items: center;
@@ -1751,27 +1703,6 @@
 }
 
 @media (max-width: 430px) {
-
-  .brand-mark {
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
-    font-size: 0.68rem;
-  }
-
-  .theme-control,
-  .theme-switch,
-  .theme-switch-visual {
-    width: 44px;
-    min-width: 44px;
-  }
-
-  .icon-text-button {
-
-    padding: 0;
-    width: 44px;
-    min-width: 44px;
-  }
 
   .shopping-item-name strong {
     font-size: 0.98rem;
@@ -1858,31 +1789,6 @@
   background: var(--surface);
 }
 
-.view-tabs-list {
-  display: inline-flex;
-  width: auto;
-  height: auto;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--line-strong);
-  background: var(--surface-soft);
-  border-radius: 0;
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--line-strong) 48%, transparent);
-}
-
-.view-tab {
-
-  gap: 7px;
-  padding: 9px 14px;
-  border: 1px solid transparent;
-  color: var(--ink-muted);
-  font-size: 0.84rem;
-  font-weight: 800;
-  box-shadow: none;
-  min-height: 44px;
-  border-radius: 0;
-}
-
 .weekly-cost {
   display: grid;
   min-width: 125px;
@@ -1966,6 +1872,7 @@
 }
 
 .week-tab {
+  text-align: left;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -2192,38 +2099,8 @@
 
 @media (max-width: 780px) {
 
-  .week-tabs-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    margin-right: -10px;
-    padding-right: 10px;
-  }
-
-  .week-tab {
-    scroll-snap-align: start;
-    min-width: 142px;
-    min-height: 58px;
-  }
-
   .week-caption {
     display: none;
-  }
-
-  .toolbar-actions {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .toolbar-actions .weekly-cost {
-    margin-left: auto;
-  }
-
-  .icon-text-button {
-    width: auto;
-    min-width: 44px;
-    margin-right: 0;
   }
 
   .shopping-layout {
@@ -2232,10 +2109,6 @@
 
   .shopping-sections {
     grid-template-columns: 1fr;
-  }
-
-  .shopping-item-name strong {
-    font-size: 1rem;
   }
 
 }
@@ -2254,10 +2127,6 @@
     font-size: 1.62rem;
   }
 
-  .week-tab {
-    min-width: 136px;
-  }
-
   .toolbar-actions .weekly-cost {
     padding-left: 8px;
   }
@@ -2268,43 +2137,11 @@
 
   .extra-shopping-form input,
   .extra-shopping-form select {
-    font-size: 16px;
+    font-size: 1rem;
   }
 
   .search-field input {
-    font-size: 16px;
-  }
-}
-
-@media (max-width: 430px) {
-  .theme-control {
-    width: 44px;
-    grid-template-columns: 44px;
-  }
-
-  .theme-control-label {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-  }
-
-  .theme-switch,
-  .theme-switch-visual {
-    width: 44px;
-  }
-
-  .theme-switch-disk {
-    top: 6px;
-    left: 6px;
-    width: 28px;
-    height: 28px;
-  }
-
-  .theme-switch-visual.is-dark .theme-switch-disk {
-    left: 10px;
+    font-size: 1rem;
   }
 }
 .recipe-filter-bar:empty {
@@ -2579,33 +2416,6 @@
     min-height: 50px;
     padding: 4px 8px;
     border-top: 1px solid var(--line);
-  }
-
-  .shopping-item-row {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .shopping-item {
-    grid-template-columns: 30px minmax(0, 1fr);
-    align-items: start;
-    row-gap: 3px;
-  }
-
-  .shopping-item [data-slot="checkbox"] {
-    grid-column: 1;
-    grid-row: 1 / 3;
-  }
-
-  .shopping-item-name {
-    grid-column: 2;
-    min-width: 0;
-  }
-
-  .shopping-item-price {
-    font-size: 0.95rem;
-    grid-column: 2;
-    align-self: auto;
-    margin-top: 1px;
   }
 
   .shopping-tools {
@@ -3212,5 +3022,244 @@
 
   .freshness-heading {
     display: grid;
+  }
+}
+
+/* Adapt: phones keep full names, labelled controls and room to wrap. */
+.week-tab > strong {
+  max-width: 100%;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.recipe-reader-toolbar > .cooking-progress {
+  flex: 1 1 auto;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+}
+
+.meal-rating-interactive,
+.meal-rating-actions {
+  flex-wrap: wrap;
+}
+
+/* Cooking mode: read from arm's length, tick with a knuckle. */
+.recipe-reader .recipe-detail.is-cooking .recipe-detail-media {
+  height: clamp(120px, 18vw, 200px);
+}
+
+.recipe-detail.is-cooking .cost-breakdown {
+  display: none;
+}
+
+.recipe-reader .recipe-detail.is-cooking .method-list li {
+  font-size: 1.25rem;
+  line-height: 1.5;
+}
+
+.recipe-reader .recipe-detail.is-cooking .ingredients-list li {
+  padding-left: 0;
+  font-size: 1.0625rem;
+}
+
+.ingredients-list.is-cooking-mode li::before {
+  display: none;
+}
+
+.ingredient-check {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+}
+
+.ingredient-check input,
+.method-step-check input {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 auto;
+  margin: 0;
+  accent-color: var(--tomato);
+}
+
+.ingredients-list li.is-complete .ingredient-check span {
+  color: var(--ink-muted);
+  text-decoration: line-through;
+}
+
+.recipe-detail.is-cooking .method-list {
+  gap: 10px;
+}
+
+.recipe-detail.is-cooking .method-step-check {
+  min-height: 64px;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+}
+
+.recipe-detail.is-cooking .method-step-check input {
+  margin-top: 4px;
+}
+
+.method-step-number {
+  display: block;
+  margin-bottom: 2px;
+  color: var(--ink-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.recipe-detail.is-cooking .method-list li.is-next .method-step-check {
+  border-color: var(--active-border);
+  background: var(--surface-tint);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+
+.recipe-detail.is-cooking .method-list li.is-next .method-step-number {
+  color: var(--tomato-dark);
+}
+
+.cooking-finish {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 2px solid var(--sage);
+  border-radius: 14px;
+  background: var(--sage-soft);
+  color: var(--ink);
+}
+
+.cooking-finish > strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.cooking-finish > p {
+  margin: 0;
+}
+
+@media (max-width: 780px) {
+  .week-tabs-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .week-tab {
+    min-height: 64px;
+    padding: 8px 10px;
+    border-bottom: 1px solid color-mix(in srgb, var(--line-strong) 58%, var(--line));
+  }
+
+  .week-tab:nth-child(2n) {
+    border-right: 0;
+  }
+
+  .week-tab:nth-child(n + 3) {
+    border-bottom: 0;
+  }
+
+  .toolbar-actions {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .recipe-reader-toolbar {
+    min-height: 56px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 8px 10px;
+  }
+
+  .recipe-reader-toolbar > span {
+    text-align: left;
+  }
+
+  .recipe-reader-toolbar.is-cooking {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 430px) {
+  .brand-surname {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .recipe-cost {
+    position: static;
+    width: fit-content;
+    justify-items: start;
+    margin: 6px 0 0;
+  }
+
+  .recipe-detail-header h3,
+  .recipe-reader .recipe-detail-header h3 {
+    max-width: none;
+    padding: 0;
+    font-size: 1.6rem;
+  }
+
+  .recipe-actions button {
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .theme-control {
+    grid-template-columns: 84px;
+  }
+
+  .theme-control-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .theme-switch,
+  .theme-switch-visual {
+    grid-column: 1;
+  }
+}
+
+/* Large text: let tab labels and banner actions wrap instead of pushing the page sideways. */
+
+/* Done steps quieten rather than strike through, so the next one carries the eye. */
+.recipe-detail.is-cooking .method-list li.is-complete .method-step-check {
+  border-color: var(--line);
+  background: transparent;
+  color: var(--ink-muted);
+}
+
+.recipe-reader .recipe-detail.is-cooking .method-list li.is-complete {
+  font-size: 1rem;
+}
+
+@media (max-width: 780px) {
+  .recipe-reader .recipe-detail.is-cooking .recipe-detail-body {
+    padding-right: 12px;
+    padding-left: 12px;
   }
 }
