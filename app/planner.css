@@ -245,7 +245,6 @@
 .week-tab > small {
   font-size: 0.75rem;
   font-weight: 700;
-  opacity: 0.8;
 }
 
   .planner-heading,
@@ -1046,7 +1045,11 @@
 .shopping-item-move[data-state="open"] {
   background: var(--surface-soft);
   color: var(--tomato-dark);
-  outline: none;
+}
+
+.shopping-item-move:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .shopping-category-menu {
@@ -1954,13 +1957,13 @@
   width: 40px;
   height: 40px;
   place-items: center;
-  color: var(--hero-accent);
+  color: var(--brand-mark-ink);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: -0.06em;
   border-radius: 10px 16px 10px 16px;
-  background: var(--ink);
+  background: var(--brand-mark-bg);
   box-shadow: none;
 }
 
@@ -3174,7 +3177,7 @@
 .freshness-form select:focus-visible,
 .freshness-lot input:focus-visible {
   border-color: var(--tomato);
-  outline: 3px solid color-mix(in srgb, var(--focus-ring) 42%, transparent);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 1px;
 }
 
@@ -3353,4 +3356,9 @@
   color: var(--ink-muted);
   cursor: not-allowed;
   opacity: 0.58;
+}
+
+.plan-content:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -3px;
 }

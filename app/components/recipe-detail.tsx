@@ -197,10 +197,10 @@ export function RecipeDetail({
           </div>
           <p className="calorie-note">Weights below are cooked or served estimates unless an item is counted; brands and cooking losses will change the figures.</p>
         </section>
-        <aside className="cook-note">
+        <div className="cook-note" role="note">
           <ChefHat aria-hidden="true" />
           <div><strong>Cook&apos;s note</strong><p>{recipe.cookNote}</p></div>
-        </aside>
+        </div>
       </div>
     </article>
   );

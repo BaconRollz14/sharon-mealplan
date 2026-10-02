@@ -142,11 +142,13 @@ export function FreshnessPanel({
           {lots.map((lot) => {
             const invalidDateRange = !isValidISODate(lot.purchasedOn) || !isValidISODate(lot.useByDate) || lot.useByDate < lot.purchasedOn;
             const lotErrorId = `freshness-lot-error-${lot.id}`;
+            const lotTitleId = `freshness-lot-title-${lot.id}`;
+            const lotDescribedBy = invalidDateRange ? `${lotTitleId} ${lotErrorId}` : lotTitleId;
             return (
               <div className="freshness-lot" key={lot.id}>
-                <div className="freshness-lot-title"><strong>{lot.productName}</strong><span>{lot.quantity} {lot.unit}</span></div>
-                <label htmlFor={`freshness-lot-purchased-${lot.id}`}>Purchased<input id={`freshness-lot-purchased-${lot.id}`} type="date" value={lot.purchasedOn} onChange={(event) => onUpdateLot({ ...lot, purchasedOn: event.target.value })} aria-label={`${lot.productName} purchase date`} aria-invalid={invalidDateRange || undefined} aria-describedby={invalidDateRange ? lotErrorId : undefined} /></label>
-                <label htmlFor={`freshness-lot-use-by-${lot.id}`}>Use by<input id={`freshness-lot-use-by-${lot.id}`} type="date" value={lot.useByDate} onChange={(event) => onUpdateLot({ ...lot, useByDate: event.target.value })} aria-label={`${lot.productName} use-by date`} aria-invalid={invalidDateRange || undefined} aria-describedby={invalidDateRange ? lotErrorId : undefined} /></label>
+                <div className="freshness-lot-title"><strong id={lotTitleId}>{lot.productName}</strong><span>{lot.quantity} {lot.unit}</span></div>
+                <label htmlFor={`freshness-lot-purchased-${lot.id}`}>Purchased<input id={`freshness-lot-purchased-${lot.id}`} type="date" value={lot.purchasedOn} onChange={(event) => onUpdateLot({ ...lot, purchasedOn: event.target.value })} aria-invalid={invalidDateRange || undefined} aria-describedby={lotDescribedBy} /></label>
+                <label htmlFor={`freshness-lot-use-by-${lot.id}`}>Use by<input id={`freshness-lot-use-by-${lot.id}`} type="date" value={lot.useByDate} onChange={(event) => onUpdateLot({ ...lot, useByDate: event.target.value })} aria-invalid={invalidDateRange || undefined} aria-describedby={lotDescribedBy} /></label>
                 {invalidDateRange ? <span id={lotErrorId} className="sr-only">The purchase date must be on or before the use-by date.</span> : null}
                 <button type="button" className="freshness-remove" onClick={() => onRemoveLot(lot.id)} aria-label={`Remove ${lot.productName} pack`}><Trash2 aria-hidden="true" /></button>
               </div>

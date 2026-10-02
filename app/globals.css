@@ -11,7 +11,7 @@
   --surface-tint: var(--tomato-soft);
   --ink: #2d2025;
   --ink-soft: #514349;
-  --ink-muted: #706168;
+  --ink-muted: #66575e;
   --tomato: #5b6263;
   --tomato-dark: #3f4648;
   --tomato-soft: #e3e7e7;
@@ -57,7 +57,9 @@
   --border: var(--line);
   --input: var(--line);
   --ring: var(--tomato);
-  --focus-ring: #596266;
+  --focus-ring: #2d2025;
+  --brand-mark-bg: #2d2025;
+  --brand-mark-ink: #f0bd56;
   --selection-ink: var(--ink);
   --radius: 0.75rem;
 }
@@ -98,6 +100,8 @@
   --destructive: #ffb4ab;
   --primary-foreground: #10171f;
   --focus-ring: #b8d0e5;
+  --brand-mark-bg: #b8d0e5;
+  --brand-mark-ink: #10171f;
   --selection-ink: #10171f;
 }
 
@@ -151,7 +155,7 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid color-mix(in srgb, var(--tomato) 58%, transparent);
+  outline: 3px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
@@ -164,4 +168,34 @@ a {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
+}
+
+.app-fallback {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  width: min(36rem, calc(100% - 32px));
+  margin: 12vh auto 0;
+}
+
+.app-fallback h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.app-fallback p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.app-fallback button {
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
 }

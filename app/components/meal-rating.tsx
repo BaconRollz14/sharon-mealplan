@@ -14,6 +14,7 @@ export function MealRating({ mealName, rating, onRate = () => {}, readOnly = fal
   if (readOnly) {
     return (
       <div
+        role="img"
         className={`meal-rating meal-rating-summary ${className}`.trim()}
         aria-label={rating ? `${mealName} rated ${rating} out of 5` : `${mealName} has not been rated`}
       >

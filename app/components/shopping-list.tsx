@@ -308,7 +308,7 @@ export function ShoppingList({
           )}
         </div>
 
-        <aside className={`basket-summary${basketOpen ? " is-open" : ""}`} aria-label="Basket summary">
+        <section className={`basket-summary${basketOpen ? " is-open" : ""}`} aria-label="Basket summary">
           <button type="button" className="basket-summary-toggle" aria-expanded={basketOpen} aria-controls={`basket-summary-details-w${week.number}`} onClick={() => setBasketOpen((open) => !open)}>
             <span>Basket summary</span>
             <strong>{money.format(estimatedCheckoutTotal)}</strong>
@@ -325,7 +325,7 @@ export function ShoppingList({
               <p>Prices checked {normalisePriceDate(week.priceChecked)}. {priceBasis}</p>
             </details>
           </div>
-        </aside>
+        </section>
       </div>
     </div>
   );

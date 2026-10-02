@@ -848,7 +848,7 @@ export function PlannerClient() {
   };
 
   return (
-    <main className="planner-shell" data-active-view={activeView}>
+    <div className="planner-shell" data-active-view={activeView}>
       <PwaRegister />
       <div className="print-brand" aria-hidden="true"><strong>Sharon Meal Plan</strong><span>Our four-week family meal planner</span></div>
       <a href="#planner" className="skip-link">Skip to this week&apos;s plan</a>
@@ -890,6 +890,7 @@ export function PlannerClient() {
         </div>
       </header>
 
+      <main id="main-content">
       <section className="planner-intro" aria-labelledby="page-title">
         <picture>
           <source type="image/avif" srcSet="/family-dinner-hero-720.avif 720w, /family-dinner-hero-1280.avif 1280w, /family-dinner-hero-1672.avif 1672w" sizes="(max-width: 780px) calc(100vw - 28px), 75vw" />
@@ -1006,9 +1007,11 @@ export function PlannerClient() {
                       const mealImage = getMealImage(meal.recipeNumber, meal.name);
                       const isFavourite = favouriteRecipeIds.has(meal.id);
                       const isCooked = cookedRecipeIds.has(meal.id);
+                      const cardId = `meal-card-${meal.id}`;
+                      const stateText = [entry.mealDate === todayISO ? "Today" : "", isFavourite ? "Favourite" : "", isCooked ? "Cooked" : ""].filter(Boolean).join(", ");
                       return (
                         <div className="meal-card-group" key={meal.id} ref={(node) => { cardRefs.current[meal.id] = node; }}>
-                          <button type="button" id={`meal-card-${meal.id}`} onClick={() => selectRecipe(entry)} className="meal-card" aria-label={`Open ${meal.name} recipe`}>
+                          <button type="button" id={cardId} onClick={() => selectRecipe(entry)} className="meal-card" aria-labelledby={`${cardId}-day ${cardId}-title ${cardId}-state`} aria-describedby={`${cardId}-description ${cardId}-meta`}>
                             <span className="meal-card-image" aria-hidden="true">
                               <picture>
                                 {mealImage.srcSet ? <source type="image/webp" srcSet={mealImage.srcSet} sizes={mealImage.sizes} /> : null}
@@ -1025,17 +1028,18 @@ export function PlannerClient() {
                               </picture>
                             </span>
                             <span className="meal-card-topline">
-                            <span className="meal-day">{entry.displayDay} · <span className="meal-day-date">{readableMealDate(entry.mealDate)}</span>{query ? ` · Week ${entry.weekIndex + 1}` : ""}</span>
-                            <span className="meal-state-icons" aria-label={[entry.mealDate === todayISO ? "Today" : "", isFavourite ? "Favourite" : "", isCooked ? "Cooked" : ""].filter(Boolean).join(", ") || undefined}>
-                                {entry.mealDate === todayISO ? <span className="meal-today">Today</span> : null}
+                            <span className="meal-day" id={`${cardId}-day`}>{entry.displayDay} · <span className="meal-day-date">{readableMealDate(entry.mealDate)}</span>{query ? ` · Week ${entry.weekIndex + 1}` : ""}</span>
+                            <span className="meal-state-icons">
+                                <span className="sr-only" id={`${cardId}-state`}>{stateText}</span>
+                                {entry.mealDate === todayISO ? <span className="meal-today" aria-hidden="true">Today</span> : null}
                                 {isFavourite && <Heart aria-hidden="true" fill="currentColor" />}
                                 {isCooked && <span className="cooked-dot" aria-hidden="true">✓</span>}
                                 <ChevronRight className="meal-chevron" aria-hidden="true" />
                               </span>
                             </span>
-                            <span className="meal-card-title">{meal.name}</span>
-                            <span className="meal-card-description">{meal.description}</span>
-                            <span className="meal-meta"><span>{formatMinutes(totalMinutes(meal))} total</span></span>
+                            <span className="meal-card-title" id={`${cardId}-title`}>{meal.name}</span>
+                            <span className="meal-card-description" id={`${cardId}-description`}>{meal.description}</span>
+                            <span className="meal-meta" id={`${cardId}-meta`}><span>{formatMinutes(totalMinutes(meal))} total</span></span>
                           </button>
                           <MealRating
                             mealName={meal.name}
@@ -1063,11 +1067,12 @@ export function PlannerClient() {
           </TabsContent>
         </Tabs>
       </section>
+      </main>
 
       <footer className="site-footer">
         <p><strong>Sharon Meal Plan</strong> · {cookbook.title} · {cookbook.edition}</p>
         <p>{cookbook.costMeaning}</p>
       </footer>
-    </main>
+    </div>
   );
 }
