@@ -36,7 +36,7 @@ test("renders Sharon Meal Plan metadata", async () => {
   assert.doesNotMatch(html, /Dinner, decided/);
   assert.match(html, /<h1 class="brand">/);
   assert.match(html, /Sharon Meal Plan/);
-  const cycleStart = Date.UTC(2026, 7, 31);
+  const cycleStart = Date.UTC(2026, 8, 7);
   const today = new Date();
   const todayUTC = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate());
   const weekIndex = Math.floor((Math.max(0, Math.floor((todayUTC - cycleStart) / 86_400_000)) % 28) / 7);

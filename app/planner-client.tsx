@@ -199,8 +199,15 @@ function mealOrdersFromSaved(value: unknown) {
   return Object.fromEntries(
     Object.entries(value)
       .filter(([, ids]) => Array.isArray(ids))
-      .filter(([key]) => isISODate(key))
-      .map(([key, ids]) => [key, (ids as unknown[]).filter((id): id is string => typeof id === "string" && allRecipeIds.has(id))]),
+      .map(([key, ids]) => {
+        const weekIndex = weekIndexForInstanceKey(key);
+        // Drop orders saved under an earlier rotation start: their date now belongs to a different week.
+        if (weekIndex === null) return [key, null];
+        const weekIds = new Set(weeklyPlans[weekIndex].meals.map((meal) => meal.id));
+        const kept = (ids as unknown[]).filter((id): id is string => typeof id === "string" && allRecipeIds.has(id));
+        return [key, kept.every((id) => weekIds.has(id)) ? kept : null];
+      })
+      .filter(([, ids]) => ids !== null),
   ) as Record<string, string[]>;
 }
 
@@ -212,7 +219,8 @@ function localTodayISO() {
   return `${year}-${month}-${day}`;
 }
 
-export const PLAN_CYCLE_START = "2026-08-31";
+// Week 1 of the rotation began on Monday 7 September 2026 (so 28 Sept–4 Oct is Week 4).
+export const PLAN_CYCLE_START = "2026-09-07";
 
 function isISODate(value: unknown): value is string {
   return typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
@@ -266,6 +274,14 @@ export function cycleDateRange(startDate: string, weekIndex: number, cycleIndex 
     return `${firstParts.day} ${firstParts.month}–${lastParts.day} ${lastParts.month}`;
   }
   return `${firstParts.day} ${firstParts.month} ${firstParts.year}–${lastParts.day} ${lastParts.month} ${lastParts.year}`;
+}
+
+/** The rotation week (0–3) a Monday week-start date falls in, or null if it isn't a week start in this rotation. */
+export function weekIndexForInstanceKey(key: string) {
+  if (!isISODate(key)) return null;
+  const days = (Date.parse(`${key}T00:00:00Z`) - Date.parse(`${PLAN_CYCLE_START}T00:00:00Z`)) / 86_400_000;
+  if (!Number.isInteger(days) || days < 0 || days % 7 !== 0) return null;
+  return (days / 7) % weeklyPlans.length;
 }
 
 export function weekInstanceKeyForIndex(weekIndex: number, cycleIndex = 0) {

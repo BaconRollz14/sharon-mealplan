@@ -586,12 +586,13 @@ test("anchors the four-week cycle and removes the redundant weekday rail", async
   const plannerSource = await readFile(path.join(root, "app/planner-client.tsx"), "utf8");
   const css = await readFile(path.join(root, "app/planner.css"), "utf8");
 
-  assert.equal(PLAN_CYCLE_START, "2026-08-31");
-  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-09-07"), { weekIndex: 1, cycleIndex: 0 });
-  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-09-14"), { weekIndex: 2, cycleIndex: 0 });
-  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-09-21"), { weekIndex: 3, cycleIndex: 0 });
-  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-09-28"), { weekIndex: 0, cycleIndex: 1 });
-  assert.equal(cycleDateRange(PLAN_CYCLE_START, 0, 1), "28 September–4 October");
+  assert.equal(PLAN_CYCLE_START, "2026-09-07");
+  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-09-14"), { weekIndex: 1, cycleIndex: 0 });
+  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-09-21"), { weekIndex: 2, cycleIndex: 0 });
+  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-10-01"), { weekIndex: 3, cycleIndex: 0 }, "1 Oct 2026 is in Week 4");
+  assert.deepEqual(cyclePosition(PLAN_CYCLE_START, "2026-10-05"), { weekIndex: 0, cycleIndex: 1 });
+  assert.equal(cycleDateRange(PLAN_CYCLE_START, 3, 0), "28 September–4 October");
+  assert.equal(cycleDateRange(PLAN_CYCLE_START, 0, 1), "5–11 October");
   assert.match(plannerSource, /setInterval\(refreshToday, 60_000\)/);
   assert.doesNotMatch(plannerSource, /cycleStartDate|calendar-rail|calendar-days|calendar-day|openCalendarMeal|activeCalendarEntries/);
   assert.doesNotMatch(css, /\.calendar-(?:rail|days|day)/);
@@ -602,8 +603,9 @@ test("starts on the current cycle week before client hydration", async () => {
   const { initialWeekIndexForDate } = await vite.ssrLoadModule("/app/planner-client.tsx");
   const plannerSource = await readFile(path.join(root, "app/planner-client.tsx"), "utf8");
 
-  assert.equal(initialWeekIndexForDate("2026-09-07"), 1);
-  assert.equal(initialWeekIndexForDate("2026-09-28"), 0);
+  assert.equal(initialWeekIndexForDate("2026-09-14"), 1);
+  assert.equal(initialWeekIndexForDate("2026-10-01"), 3);
+  assert.equal(initialWeekIndexForDate("2026-10-05"), 0);
   assert.match(plannerSource, /useState\(\(\) => linked\.weekIndex \?\? initialWeekIndexForDate\(\)\)/);
   const { locationFromParams } = await vite.ssrLoadModule("/app/planner-client.tsx");
   assert.deepEqual(locationFromParams({ view: "shopping", week: "3", recipe: null }), { weekIndex: 2, view: "shopping", recipeId: null });

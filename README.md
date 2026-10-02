@@ -29,7 +29,7 @@ npm run lint
 
 ## Product constraints
 
-Preserve all 28 recipes and the Monday-to-Sunday ordering of each week. The four-week rotation is anchored to Monday 31 August 2026 and advances automatically with the device calendar. Browsing another week must not change that schedule. Meals are sized for two adults, and the shopping list reflects the recipe quantities and pack sizes rather than a fixed weekly budget.
+Preserve all 28 recipes and the Monday-to-Sunday ordering of each week. The four-week rotation is anchored to Monday 7 September 2026 and advances automatically with the device calendar. Browsing another week must not change that schedule. Meals are sized for two adults, and the shopping list reflects the recipe quantities and pack sizes rather than a fixed weekly budget.
 
 The UI should remain a practical kitchen-ledger tool rather than a marketing page. Preserve week switching, recipe search, favourites, ratings, cooked state, reordering, recipe reading/cooking progress, shopping ticks/category moves, normal recipe/week sharing, printing, dark mode and offline registration.
 
