@@ -167,14 +167,33 @@ a {
   outline-offset: 3px;
 }
 
+/* Reduced motion removes movement, not feedback: colour, border and opacity changes still
+   transition so state stays legible; anything that slides, scales or lifts stops moving. */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
-    scroll-behavior: auto !important;
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
+    transition-property: color, background-color, border-color, opacity, outline-color, box-shadow !important;
+    animation-name: fade-in !important;
     animation-iteration-count: 1 !important;
+  }
+
+  .button:hover,
+  .icon-text-button:hover,
+  .reorder-controls button:hover,
+  .recipe-actions button:hover,
+  .meal-card:hover .meal-card-image img {
+    transform: none !important;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
   }
 }
 
