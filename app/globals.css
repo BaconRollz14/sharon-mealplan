@@ -1,0 +1,228 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./planner.css";
+@import "./print.css";
+
+:root {
+  /* Light: cream paper, aubergine ink, aubergine actions. Tokens are named by role. */
+  --paper: #f1eadf;
+  --surface: #fbf8f1;
+  --surface-strong: #fffdf8;
+  --surface-soft: #e8ded0;
+  --surface-tint: var(--action-soft);
+  --ink: #2d2025;
+  --ink-soft: #514349;
+  --ink-muted: #66575e;
+  --action: #6b3352;
+  --action-strong: #4e2139;
+  --action-soft: #f0e3ea;
+  --positive: #4f5e43;
+  --positive-soft: #e4e8dc;
+  --highlight: #e9b853;
+  --highlight-soft: #f7ebcb;
+  --highlight-strong: #7a4f00;
+  --line: #d4c6b8;
+  --line-strong: #a99687;
+  --rating-muted: #66545a;
+  --rating-filled: #7a4f00;
+  --inverse-surface: #34222a;
+  --inverse-ink: #fffdf7;
+  --inverse-accent: #f0bd56;
+  --active-fill: #2d2025;
+  --active-border: #2d2025;
+  --active-text: #fffdf7;
+  --active-thumb: #e4ddd4;
+  --brand-mark-bg: #2d2025;
+  --brand-mark-ink: #f0bd56;
+  --shadow: 0 18px 50px rgb(45 32 37 / 10%);
+  --shadow-soft: 0 8px 24px rgb(45 32 37 / 8%);
+  /* Three radii: control (inputs, small buttons, menus), card (sections, notices, steps), panel (major surfaces). */
+  --radius-control: 10px;
+  --radius-card: 14px;
+  --radius-panel: 18px;
+  --shadow-control: 0 1px 4px rgb(45 32 37 / 25%);
+  --shadow-lift: 0 -6px 24px rgb(45 32 37 / 20%);
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--action);
+  --primary-foreground: #fffdf8;
+  --secondary: var(--surface-soft);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-soft);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--action-soft);
+  --accent-foreground: var(--action-strong);
+  --destructive: #b42318;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--action);
+  --focus-ring: #2d2025;
+  --selection-ink: var(--ink);
+  --radius: 0.75rem;
+  /* Five-step type scale; nothing on screen is smaller than --text-sm. These names
+     deliberately match Tailwind's, so the UI-kit text-* utilities land on the same steps. */
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 2rem;
+}
+
+:root[data-theme="dark"] {
+  /* Dark: espresso grounds, cream text, one muted brass accent; the warmth of the light theme carried into low light. */
+  --paper: #171311;
+  --surface: #241d1a;
+  --surface-strong: #302621;
+  --surface-soft: #3a2f28;
+  --surface-tint: var(--action-soft);
+  --ink: #f4ece1;
+  --ink-soft: #ddd0c2;
+  --ink-muted: #bcae9f;
+  --action: #d2a568;
+  --action-strong: #f0ce98;
+  --action-soft: #493724;
+  --positive: #b9c79f;
+  --positive-soft: #2e3326;
+  --highlight: #e9b853;
+  --highlight-soft: #42341f;
+  --highlight-strong: #f0ce98;
+  --line: #57483f;
+  --line-strong: #7a6759;
+  --rating-muted: #8a7a6c;
+  --rating-filled: #f0ce98;
+  --inverse-surface: #34222a;
+  --inverse-ink: #f7efe4;
+  --inverse-accent: #f0ce98;
+  --active-fill: #4a3a2a;
+  --active-border: #d2a568;
+  --active-text: #f4ece1;
+  --active-thumb: #f0ce98;
+  --brand-mark-bg: #d2a568;
+  --brand-mark-ink: #1f1714;
+  --shadow: 0 22px 55px rgb(0 0 0 / 55%);
+  --shadow-soft: 0 10px 26px rgb(0 0 0 / 35%);
+  --shadow-control: 0 1px 4px rgb(0 0 0 / 40%);
+  --shadow-lift: 0 -6px 24px rgb(0 0 0 / 45%);
+  --destructive: #ffb4ab;
+  --primary-foreground: #1f1714;
+  --focus-ring: #f0ce98;
+  --selection-ink: #1f1714;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+a {
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* Reduced motion removes movement, not feedback: colour, border and opacity changes still
+   transition so state stays legible; anything that slides, scales or lifts stops moving. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-property: color, background-color, border-color, opacity, outline-color, box-shadow !important;
+    animation-name: fade-in !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .button:hover,
+  .icon-text-button:hover,
+  .reorder-controls button:hover,
+  .recipe-actions button:hover,
+  .meal-card:hover .meal-card-image img {
+    transform: none !important;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.app-fallback {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  width: min(36rem, calc(100% - 32px));
+  margin: 12vh auto 0;
+}
+
+.app-fallback h1 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.app-fallback p {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.app-fallback button {
+  min-height: 44px;
+  padding: 8px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 600;
+}

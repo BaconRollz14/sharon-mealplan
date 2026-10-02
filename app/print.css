@@ -1,0 +1,222 @@
+@media print {
+  /* html:root beats the screen theme blocks, which load after this file. */
+  html:root,
+  html:root[data-theme] {
+    color-scheme: light;
+    --paper: #fff;
+    --surface: #fff;
+    --surface-strong: #fff;
+    --surface-soft: #f3f0ec;
+    --surface-tint: #fff;
+    --ink: #111;
+    --ink-soft: #222;
+    --ink-muted: #555;
+    --line: #bbb;
+    --line-strong: #888;
+    --action: #4e2139;
+    --action-strong: #4e2139;
+    --positive: #365c4d;
+    --shadow: none;
+    --shadow-soft: none;
+    --shadow-lift: none;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff !important;
+    font-size: 10pt;
+  }
+
+  .planner-shell {
+    width: 100%;
+    padding: 0;
+  }
+
+  .print-brand {
+    display: grid;
+    gap: 1mm;
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .print-brand strong {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16pt;
+    font-weight: 600;
+  }
+
+  .print-brand span {
+    color: var(--ink-muted);
+    font-size: 9pt;
+  }
+
+  /* Screen-only: status, warnings, navigation, photos and controls. */
+  .skip-link,
+  .storage-warning,
+  .planner-notice,
+  .freshness-warning,
+  .site-header,
+  .tonight-card,
+  .week-overview,
+  .planner-sticky,
+  .recipe-controls,
+  .recipe-filter-bar,
+  .recipe-grid,
+  .empty-search,
+  .shopping-tools,
+  .extra-shopping-form,
+  .basket-summary,
+  .freshness-panel,
+  .site-footer,
+  .recipe-actions,
+  .meal-rating,
+  .recipe-reader-toolbar,
+  .recipe-detail-media,
+  .cooking-mode-hint,
+  .cooking-finish,
+  .shopping-item-move {
+    display: none !important;
+  }
+
+  .print-week-heading {
+    display: block;
+    margin-bottom: 5mm;
+    color: var(--ink);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16pt;
+    font-weight: 600;
+  }
+
+  .planner,
+  .plan-content {
+    overflow: visible;
+    padding: 0;
+    border: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  /* Dinners: the week's menu as a ruled list. */
+  .print-menu {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .print-menu li {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr) auto;
+    gap: 4mm;
+    padding: 2.5mm 0;
+    border-bottom: 1px solid var(--line);
+    break-inside: avoid;
+  }
+
+  .print-menu strong {
+    font-weight: 600;
+  }
+
+  .print-menu span {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11pt;
+  }
+
+  .print-menu small {
+    color: var(--ink-muted);
+    font-size: 9pt;
+  }
+
+  /* Recipe. */
+  .recipe-reader,
+  .recipe-detail {
+    display: block !important;
+  }
+
+  .recipe-detail {
+    position: static;
+    overflow: visible;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .recipe-detail-header,
+  .recipe-detail-body {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    background: #fff !important;
+  }
+
+  .recipe-detail-body section,
+  .cost-breakdown,
+  .portion-section {
+    break-inside: avoid;
+  }
+
+  .cost-breakdown > summary {
+    display: flex;
+  }
+
+  .cost-breakdown-content {
+    display: block !important;
+  }
+
+  /* Shopping: two columns, price beside the item. */
+  .shopping-layout {
+    display: block !important;
+  }
+
+  .shopping-sections {
+    display: block !important;
+    column-count: 2;
+    column-gap: 8mm;
+  }
+
+  .shopping-section {
+    margin-bottom: 5mm;
+    border-radius: 0;
+    break-inside: avoid;
+  }
+
+  .shopping-section h4 {
+    padding: 1.5mm 2mm;
+  }
+
+  .shopping-section ul {
+    padding: 0 2mm;
+  }
+
+  .shopping-item-row {
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .shopping-item {
+    min-height: 0;
+    grid-template-columns: 5mm minmax(0, 1fr) auto;
+    gap: 2mm;
+    padding: 1.2mm 0;
+  }
+
+  .shopping-item-name strong {
+    font-size: 10pt;
+  }
+
+  .shopping-item-name small,
+  .shopping-item-price {
+    font-size: 9pt;
+  }
+
+  .shopping-item-price {
+    align-self: start;
+  }
+
+  .shopping-tab-content[hidden],
+  .recipe-view[hidden] {
+    display: none !important;
+  }
+}

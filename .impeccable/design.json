@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-01T16:00:00Z",
+  "title": "Design System: Sharon Meal Plan",
+  "extensions": {
+    "colorMeta": {
+      "aubergine-action": {
+        "role": "primary",
+        "displayName": "Aubergine Action",
+        "canonical": "#6b3352",
+        "token": "--action (light)"
+      },
+      "brass": {
+        "role": "primary",
+        "displayName": "Brass",
+        "canonical": "#d2a568",
+        "token": "--action (dark)"
+      },
+      "aubergine-deep": {
+        "role": "primary",
+        "displayName": "Aubergine Deep",
+        "canonical": "#34222a",
+        "token": "--inverse-surface"
+      },
+      "olive": {
+        "role": "secondary",
+        "displayName": "Olive",
+        "canonical": "#4f5e43",
+        "token": "--positive (light)"
+      },
+      "butter": {
+        "role": "tertiary",
+        "displayName": "Butter",
+        "canonical": "#e9b853",
+        "token": "--highlight"
+      },
+      "cream-paper": {
+        "role": "neutral",
+        "displayName": "Cream Paper",
+        "canonical": "#f1eadf",
+        "token": "--paper (light)"
+      },
+      "espresso-paper": {
+        "role": "neutral",
+        "displayName": "Espresso Paper",
+        "canonical": "#171311",
+        "token": "--paper (dark)"
+      },
+      "aubergine-ink": {
+        "role": "neutral",
+        "displayName": "Aubergine Ink",
+        "canonical": "#2d2025",
+        "token": "--ink (light)"
+      },
+      "cream-ink": {
+        "role": "neutral",
+        "displayName": "Cream Ink",
+        "canonical": "#f4ece1",
+        "token": "--ink (dark)"
+      },
+      "oat-line": {
+        "role": "neutral",
+        "displayName": "Oat Line",
+        "canonical": "#d4c6b8",
+        "token": "--line (light)"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Cookbook Display",
+        "purpose": "Tonight card dinner name and open recipe title."
+      },
+      "headline": {
+        "displayName": "Week Headline",
+        "purpose": "Active week title."
+      },
+      "title": {
+        "displayName": "Meal Title",
+        "purpose": "Meal names on cards and section moments."
+      },
+      "body": {
+        "displayName": "Working Text",
+        "purpose": "Descriptions, ingredients and methods."
+      },
+      "label": {
+        "displayName": "Ledger Label",
+        "purpose": "Days, prices, metadata and controls."
+      }
+    },
+    "shadows": [
+      {
+        "name": "soft",
+        "value": "0 8px 24px rgb(45 32 37 / 8%)",
+        "purpose": "Sticky recipe toolbar and the next cooking step."
+      },
+      {
+        "name": "menu",
+        "value": "0 18px 50px rgb(45 32 37 / 10%)",
+        "purpose": "Dropdown menus and the pinned basket bar."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-change",
+        "value": "150ms ease",
+        "purpose": "Hover, focus and compact control feedback."
+      },
+      {
+        "name": "reorder",
+        "value": "200ms cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Dinners sliding to their new day when reordered."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide",
+        "value": "1400px"
+      },
+      {
+        "name": "compact-desktop",
+        "value": "1180px"
+      },
+      {
+        "name": "mobile",
+        "value": "780px"
+      },
+      {
+        "name": "small-mobile",
+        "value": "430px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action in a group.",
+      "html": "<button class=\"ds-btn-primary\">Start cooking</button>",
+      "css": ".ds-btn-primary{min-height:44px;padding:10px 16px;border:0;border-radius:999px;background:var(--action,#6b3352);color:var(--primary-foreground,#fffdf8);font:600 0.9375rem/1 system-ui,sans-serif;transition:transform 150ms ease}.ds-btn-primary:hover{transform:translateY(-1px)}.ds-btn-primary:focus-visible{outline:3px solid var(--focus-ring,#2d2025);outline-offset:3px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Alternative actions.",
+      "html": "<button class=\"ds-btn-secondary\">Open recipe</button>",
+      "css": ".ds-btn-secondary{min-height:44px;padding:10px 16px;border:1px solid var(--line,#d4c6b8);border-radius:999px;background:var(--surface,#fbf8f1);color:var(--ink,#2d2025);font:600 0.9375rem/1 system-ui,sans-serif}.ds-btn-secondary:hover{border-color:var(--ink-muted,#66575e)}.ds-btn-secondary:focus-visible{outline:3px solid var(--focus-ring,#2d2025);outline-offset:3px}"
+    },
+    {
+      "name": "Tonight Card",
+      "kind": "card",
+      "refersTo": "tonight-card",
+      "description": "The first thing on the page: tonight's dinner and how to start.",
+      "html": "<section class=\"ds-tonight\"><h2><em>Tonight</em>Honey-garlic chicken fried rice</h2><p>Thursday · 30 min</p></section>",
+      "css": ".ds-tonight{padding:32px 48px;border-radius:18px;background:var(--inverse-surface,#34222a);color:var(--inverse-ink,#fffdf7)}.ds-tonight h2{margin:0;font:600 2.5rem/1.05 Georgia,serif;letter-spacing:-0.02em}.ds-tonight em{display:block;font-size:0.55em;color:var(--inverse-accent,#f0bd56)}.ds-tonight p{margin:12px 0 0;font:400 0.9375rem system-ui,sans-serif}"
+    },
+    {
+      "name": "Week Tab",
+      "kind": "nav",
+      "refersTo": "week-tab-active",
+      "description": "Connected week selector; active week filled.",
+      "html": "<button class=\"ds-week\" aria-pressed=\"true\"><span>Week 1</span><strong>Family favourites</strong><small>£50.26 shop</small></button>",
+      "css": ".ds-week{display:grid;gap:2px;min-height:62px;padding:8px 12px;border:1px solid var(--line-strong,#a99687);background:var(--active-fill,#2d2025);color:var(--active-text,#fffdf7);text-align:left;font:600 0.8125rem system-ui,sans-serif}"
+    },
+    {
+      "name": "Cooking Step",
+      "kind": "custom",
+      "description": "A 64px tick target; the next step is highlighted.",
+      "html": "<label class=\"ds-step\"><input type=\"checkbox\"><span><small>Step 3</small>Heat 1 tbsp oil in a large frying pan.</span></label>",
+      "css": ".ds-step{display:flex;gap:14px;min-height:64px;padding:16px;border:2px solid var(--active-border,#2d2025);border-radius:14px;background:var(--surface-tint,#f0e3ea);font:400 1.25rem/1.5 system-ui,sans-serif}.ds-step input{width:26px;height:26px}.ds-step small{display:block;font-size:0.8125rem;font-weight:600}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Kitchen Ledger",
+    "keyCharacteristics": [
+      "Tonight first, then the week, then the shop.",
+      "Cream paper and aubergine ink in light; espresso, cream and brass in dark.",
+      "Georgia for meals and headings, system sans for everything you act on.",
+      "Flat ruled grids inside rounded working surfaces.",
+      "Kitchen-scale targets: 44px minimum everywhere, 64px for cooking steps."
+    ],
+    "rules": [
+      {
+        "name": "The Role Name Rule",
+        "body": "A token is named for what it does (--action, --positive, --highlight), never for a colour. If the colour changes, the name stays true.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Accent Rule",
+        "body": "Each theme has one accent colour for action. Olive means done; butter means look at the use-by dates. Nothing else gets colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Grey Primary Rule",
+        "body": "A primary button is always --action on --primary-foreground. A grey button reads as disabled.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two-Voice Rule",
+        "body": "Serif carries meals and orientation. Sans carries actions, metadata, prices and instructions; prices use tabular sans numerals, never bold serif.",
+        "section": "typography"
+      },
+      {
+        "name": "The Gentle Tracking Rule",
+        "body": "Display tracking is never tighter than -0.02em; Georgia pinches below that.",
+        "section": "typography"
+      }
+    ]
+  }
+}
