@@ -164,11 +164,11 @@
   border-radius: 50%;
   background: var(--ink-muted);
   box-shadow: 0 2px 5px rgb(0 0 0 / 24%);
-  transition: left 180ms ease, background-color 180ms ease;
+  transition: transform 180ms cubic-bezier(0.22, 1, 0.36, 1), background-color 180ms ease;
 }
 
 .theme-switch-visual.is-dark .theme-switch-disk {
-  left: 42px;
+  transform: translateX(36px);
   background: var(--active-thumb);
 }
 
@@ -937,6 +937,9 @@
 }
 
 .shopping-section h4 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
   padding: 13px 15px;
   border-bottom: 1px solid var(--line-strong);
@@ -2054,10 +2057,10 @@
   min-height: 44px;
 }
 
-.shopping-item.is-checked .shopping-item-name strong {
+.shopping-item.is-checked .shopping-item-name strong,
+.shopping-item.is-checked .shopping-item-price {
   color: var(--ink-muted);
   text-decoration: none;
-  opacity: 0.72;
 }
 
 .shopping-category-menu [data-slot="dropdown-menu-item"] {
@@ -3107,16 +3110,6 @@
   gap: 10px;
 }
 
-.recipe-detail.is-cooking .method-step-check {
-  min-height: 64px;
-  align-items: flex-start;
-  gap: 14px;
-  padding: 16px;
-  border: 2px solid var(--line);
-  border-radius: 14px;
-  background: var(--surface-strong);
-}
-
 .recipe-detail.is-cooking .method-step-check input {
   margin-top: 4px;
 }
@@ -3137,18 +3130,6 @@
 
 .recipe-detail.is-cooking .method-list li.is-next .method-step-number {
   color: var(--action-strong);
-}
-
-.cooking-finish {
-  display: grid;
-  justify-items: start;
-  gap: 12px;
-  margin-top: 16px;
-  padding: 18px;
-  border: 2px solid var(--positive);
-  border-radius: 14px;
-  background: var(--positive-soft);
-  color: var(--ink);
 }
 
 .cooking-finish > strong {
@@ -3294,4 +3275,63 @@
   padding: 40px 0;
   color: var(--ink-muted);
   text-align: center;
+}
+
+/* Earned moments: an aisle finished, dinner up, dinners finding their new day. */
+.shopping-section.is-done h4 {
+  background: var(--positive-soft);
+}
+
+.shopping-section-done {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  color: var(--positive);
+  letter-spacing: 0;
+  text-transform: none;
+  animation: settle-in 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.shopping-section-done svg {
+  width: 16px;
+  height: 16px;
+}
+
+.cooking-finish {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 2px solid var(--positive);
+  border-radius: 14px;
+  background: var(--positive-soft);
+  color: var(--ink);
+  animation: rise-in 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.recipe-detail.is-cooking .method-step-check {
+  min-height: 64px;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  border: 2px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface-strong);
+  transition: border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+}
+
+@keyframes settle-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes rise-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
 }

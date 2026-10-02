@@ -558,7 +558,8 @@ test("uses a fully contained 44px-high theme control with one visual positioning
   assert.equal(themeDisk?.left, "6px");
   assert.equal(themeDisk?.width, "32px");
   assert.equal(themeDisk?.height, "32px");
-  assert.equal(finalRuleDeclarations(css, ".theme-switch-visual.is-dark .theme-switch-disk")?.left, "42px");
+  assert.equal(finalRuleDeclarations(css, ".theme-switch-visual.is-dark .theme-switch-disk")?.transform, "translateX(36px)");
+  assert.match(themeDisk?.transition ?? "", /^transform /, "the switch moves with transform, not left");
   assert.equal(finalRuleDeclarations(css, '.week-tab[data-state="active"]')?.background, "var(--active-fill)");
   assert.equal(finalRuleDeclarations(globalCss, ":root")?.["--active-fill"], "#2d2025");
   assert.equal(finalRuleDeclarations(css, ".theme-control")?.["grid-template-columns"], "auto 84px");

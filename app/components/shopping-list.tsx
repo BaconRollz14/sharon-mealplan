@@ -2,6 +2,7 @@
 
 import { FormEvent, memo, useRef, useState } from "react";
 import {
+  Check,
   CirclePoundSterling,
   ListChecks,
   MoreHorizontal,
@@ -126,6 +127,7 @@ export const ShoppingList = memo(function ShoppingList({
     })),
   ];
   const pickedCount = allItems.filter(({ key }) => checkedItems.has(key)).length;
+  const allPicked = allItems.length > 0 && pickedCount === allItems.length;
   const pricedExtras = extraItems.filter((item) => !item.carriedForward && (item.priceKnown ?? item.price > 0) && Number.isFinite(item.price) && item.price >= 0);
   const unknownExtras = extraItems.filter((item) => !item.carriedForward && !(item.priceKnown ?? item.price > 0));
   const extrasTotal = pricedExtras.reduce((total, item) => total + item.price, 0);
@@ -200,7 +202,7 @@ export const ShoppingList = memo(function ShoppingList({
       <h3 className="sr-only">Week {week.number} shopping list</h3>
 
       <div className="shopping-tools" aria-label="Shopping list tools">
-        <p className="shopping-progress" aria-live="polite">{pickedCount} of {allItems.length} picked</p>
+        <p className="shopping-progress" aria-live="polite">{allPicked ? "That\u2019s the lot. Everything is picked." : `${pickedCount} of ${allItems.length} picked`}</p>
         <label className="compact-switch" htmlFor="remaining-items-switch">
           <Switch id="remaining-items-switch" checked={showRemaining} onCheckedChange={onShowRemainingChange} />
           <span>Show remaining only</span>
@@ -238,9 +240,10 @@ export const ShoppingList = memo(function ShoppingList({
             <div className="shopping-sections">
               {visibleSections.map((section) => {
                 const sectionId = `shopping-section-w${week.number}-${slugify(section.title)}`;
+                const sectionDone = section.items.every(({ key }) => checkedItems.has(key));
                 return (
-                  <section className="shopping-section" key={section.title} aria-labelledby={sectionId}>
-                    <h4 id={sectionId}>{section.title}</h4>
+                  <section className={`shopping-section${sectionDone ? " is-done" : ""}`} key={section.title} aria-labelledby={sectionId}>
+                    <h4 id={sectionId}>{section.title}{sectionDone ? <span className="shopping-section-done"><Check aria-hidden="true" />Done</span> : null}</h4>
                     <ul>
                       {section.items.map(({ item, key, isExtra }) => {
                         const checked = checkedItems.has(key);
@@ -297,7 +300,7 @@ export const ShoppingList = memo(function ShoppingList({
 
         <section className={`basket-summary${basketOpen ? " is-open" : ""}`} aria-label="Shop total">
           <button type="button" className="basket-summary-toggle" aria-expanded={basketOpen} aria-controls={`basket-summary-details-w${week.number}`} onClick={() => setBasketOpen((open) => !open)}>
-            <span>{pickedCount} of {allItems.length} picked</span>
+            <span>{allPicked ? "That\u2019s the lot" : `${pickedCount} of ${allItems.length} picked`}</span>
             <strong>{money.format(estimatedCheckoutTotal)}</strong>
           </button>
           <div className="basket-summary-details" id={`basket-summary-details-w${week.number}`}>

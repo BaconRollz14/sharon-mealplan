@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowDown,
@@ -323,6 +323,7 @@ export function PlannerClient() {
   const initialUrlAppliedRef = useRef(false);
   const autoWeekRef = useRef<number | null>(null);
   const pendingMoveFirstActionRef = useRef<HTMLButtonElement | null>(null);
+  const flipFromRef = useRef<Map<string, { x: number; y: number }> | null>(null);
 
   const currentLocalState = useMemo<LocalPlannerState>(() => ({
     activeWeekIndex,
@@ -600,9 +601,31 @@ export function PlannerClient() {
     [methodProgress, selectedRecipeId],
   );
 
+
   const selectedNextStep = selectedEntry ? selectedEntry.recipe.method.findIndex((_, index) => !selectedSteps.has(index)) : -1;
 
   const activeOrder = useMemo(() => activeMeals.map(({ recipe }) => recipe.id), [activeMeals]);
+
+  useLayoutEffect(() => {
+    const from = flipFromRef.current;
+    if (!from) return;
+    flipFromRef.current = null;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    for (const [id, node] of Object.entries(cardRefs.current)) {
+      const before = from.get(id);
+      if (!node?.isConnected || !before || typeof node.animate !== "function") continue;
+      const rect = node.getBoundingClientRect();
+      const dx = before.x - (rect.left + window.scrollX);
+      const dy = before.y - (rect.top + window.scrollY);
+      if (Math.abs(dx) < 1 && Math.abs(dy) < 1) continue;
+      node.animate(
+        reduceMotion
+          ? [{ backgroundColor: "var(--action-soft)" }, { backgroundColor: "var(--surface-strong)" }]
+          : [{ transform: `translate(${dx}px, ${dy}px)` }, { transform: "translate(0, 0)" }],
+        { duration: reduceMotion ? 400 : 220, easing: "cubic-bezier(0.22, 1, 0.36, 1)" },
+      );
+    }
+  }, [activeOrder]);
   const activeFreshnessLots = useMemo(() => freshnessLots[activeWeekInstanceKey] ?? [], [activeWeekInstanceKey, freshnessLots]);
   const activeFreshnessEvaluation = useMemo(
     () => validateSchedule({ week: activeWeek, weekStartISO: activeWeekInstanceKey, order: activeOrder, lots: activeFreshnessLots }),
@@ -767,6 +790,12 @@ export function PlannerClient() {
   }, []);
 
   const storeMealOrder = useCallback((nextOrder: string[]) => {
+    // Remember where each dinner sits so the reorder can slide rather than jump.
+    flipFromRef.current = new Map(Object.entries(cardRefs.current).flatMap(([id, node]) => {
+      if (!node?.isConnected) return [];
+      const rect = node.getBoundingClientRect();
+      return [[id, { x: rect.left + window.scrollX, y: rect.top + window.scrollY }] as const];
+    }));
     const originalOrder = assignedMeals(activeWeek).map(({ recipe }) => recipe.id);
     setMealOrders((current) => {
       const next = { ...current };
