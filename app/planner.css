@@ -238,11 +238,6 @@
   font-weight: 600;
 }
 
-.week-tab > small {
-  font-size: var(--text-sm);
-  font-weight: 600;
-}
-
   .planner-heading,
   .plan-toolbar,
   .recipe-filter-bar,
@@ -589,14 +584,6 @@
   list-style: none;
 }
 
-.ingredients-list li {
-  position: relative;
-  padding-left: 13px;
-  color: var(--ink-soft);
-  font-size: var(--text-sm);
-  line-height: 1.38;
-}
-
 .ingredients-list li::before {
   position: absolute;
   top: 0.48em;
@@ -935,14 +922,23 @@
   background: var(--surface-strong);
 }
 
+.shopping-section-head {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 4px;
+  padding-right: 4px;
+  border-bottom: 1px solid var(--line-strong);
+  background: var(--surface-soft);
+}
+
 .shopping-section h4 {
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   gap: 8px;
   margin: 0;
   padding: 13px 15px;
-  border-bottom: 1px solid var(--line-strong);
-  background: var(--surface-soft);
   color: var(--ink);
   font-size: var(--text-sm);
   font-weight: 600;
@@ -1466,17 +1462,6 @@
   padding-top: 10px;
 }
 
-.site-header {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  min-height: 68px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid var(--line-strong);
-}
-
 .brand-mark {
   display: inline-grid;
   width: 40px;
@@ -1594,24 +1579,6 @@
   background: var(--surface-strong);
   gap: 0;
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--line-strong) 48%, transparent);
-}
-
-.week-tab {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 2px;
-  color: var(--ink-muted);
-  box-shadow: none;
-  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
-  border: 0;
-  border-right: 1px solid color-mix(in srgb, var(--line-strong) 58%, var(--line));
-  border-radius: 0;
-  background: transparent;
-  min-height: 62px;
-  padding: 8px 12px;
 }
 
 .planner-sticky {
@@ -2233,16 +2200,6 @@
 }
 
 /* Tonight: the first thing on the page is the dinner you are about to cook. */
-.tonight-card {
-  display: grid;
-  min-height: 280px;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-  margin: 0 0 22px;
-  overflow: hidden;
-  border-radius: var(--radius-panel);
-  background: var(--inverse-surface);
-  color: var(--inverse-ink);
-}
 
 .tonight-image {
   position: relative;
@@ -2459,16 +2416,6 @@
   overflow-wrap: anywhere;
 }
 
-.recipe-reader-toolbar > .cooking-progress {
-  flex: 1 1 auto;
-  color: var(--ink);
-  font-size: var(--text-base);
-  font-weight: 600;
-  letter-spacing: 0;
-  text-align: center;
-  text-transform: none;
-}
-
 .meal-rating-interactive,
 .meal-rating-actions {
   flex-wrap: wrap;
@@ -2588,14 +2535,8 @@
   font-size: var(--text-sm);
 }
 
-.recipe-loading {
-  padding: 40px 0;
-  color: var(--ink-muted);
-  text-align: center;
-}
-
 /* Earned moments: an aisle finished, dinner up, dinners finding their new day. */
-.shopping-section.is-done h4 {
+.shopping-section.is-done .shopping-section-head {
   background: var(--positive-soft);
 }
 
@@ -2637,6 +2578,195 @@
   border-radius: var(--radius-card);
   background: var(--surface-strong);
   transition: border-color 200ms ease, background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.print-menu {
+  display: none;
+}
+
+/* One clear button in search: the app's own, not the browser's as well. */
+.search-field input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+/* Tick a whole aisle at once. */
+.shopping-section-tick {
+  min-height: 44px;
+  flex: 0 0 auto;
+  padding: 0 12px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--action-strong);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.shopping-section-tick:hover {
+  background: var(--surface-strong);
+}
+
+/* Reordering is a visible mode with its own way out. */
+.reorder-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border: 2px solid var(--active-border);
+  border-radius: var(--radius-card);
+  background: var(--surface-tint);
+  color: var(--ink);
+}
+
+.reorder-bar p {
+  margin: 0;
+  font-size: var(--text-md);
+}
+
+.reorder-bar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.reorder-move-to {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-muted);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.reorder-move-to select {
+  min-height: 44px;
+  flex: 1 1 auto;
+  padding: 6px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface-strong);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-base);
+}
+
+/* Cooking mode owns the screen: the planner around it steps away. */
+.planner-shell.is-cooking .week-overview,
+.planner-shell.is-cooking .site-footer,
+.planner-shell.is-cooking .recipe-detail-media,
+.planner-shell.is-cooking .recipe-cost,
+.planner-shell.is-cooking .recipe-actions,
+.planner-shell.is-cooking .recipe-detail-header > p,
+.planner-shell.is-cooking .recipe-stats {
+  display: none;
+}
+
+.planner-shell.is-cooking .plan-content {
+  border-top: 1px solid var(--line-strong);
+  border-radius: var(--radius-panel);
+}
+
+.recipe-reader-toolbar > .cooking-progress {
+  flex: 1 1 auto;
+  color: var(--ink);
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: none;
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+
+.week-tab-shop {
+  font-weight: inherit;
+}
+
+/* Focus stays visible on the aubergine Tonight card. */
+.tonight-card {
+  display: grid;
+  min-height: 280px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  margin: 0 0 22px;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  background: var(--inverse-surface);
+  color: var(--inverse-ink);
+  --focus-ring: var(--inverse-accent);
+}
+
+/* Large text: the masthead wraps rather than colliding; long ingredients break. */
+.site-header {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 68px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--line-strong);
+  flex-wrap: wrap;
+}
+
+.ingredients-list li {
+  position: relative;
+  padding-left: 13px;
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  line-height: 1.38;
+  overflow-wrap: anywhere;
+}
+
+/* While cooking the masthead leaves the screen but its heading stays for screen readers. */
+.planner-shell.is-cooking .site-header,
+.planner-shell.is-cooking .planner-sticky {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.planner-shell.is-cooking .header-actions,
+.planner-shell.is-cooking .plan-toolbar {
+  display: none;
+}
+
+.week-tab {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 2px;
+  color: var(--ink-muted);
+  box-shadow: none;
+  transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  border: 0;
+  border-right: 1px solid color-mix(in srgb, var(--line-strong) 58%, var(--line));
+  border-radius: 0;
+  background: transparent;
+  min-height: 62px;
+  padding: 8px 12px;
+  position: relative;
+  min-width: 0;
+}
+
+.week-tab > small {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 @media (min-width: 781px) {
@@ -2726,7 +2856,7 @@
 @media (max-width: 1080px) {
 
   .recipe-reader .recipe-detail-body {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .recipe-reader :is(.cost-breakdown, .portion-section, .cook-note) {
@@ -2860,7 +2990,7 @@
     justify-content: flex-start;
   }
   .planner-shell {
-    width: min(100% - 20px, 650px);
+    width: min(100% - 32px, 650px);
     padding-top: 4px;
   }
 
@@ -3060,20 +3190,6 @@
   .freshness-heading {
     display: grid;
   }
-  .week-tabs-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .week-tab {
-    min-height: 64px;
-    padding: 8px 10px;
-    border-bottom: 1px solid color-mix(in srgb, var(--line-strong) 58%, var(--line));
-  }
-
-  .week-tab:nth-child(2n) {
-    border-right: 0;
-  }
 
   .week-tab:nth-child(n + 3) {
     border-bottom: 0;
@@ -3102,6 +3218,33 @@
   .recipe-reader .recipe-detail.is-cooking .recipe-detail-body {
     padding-right: 12px;
     padding-left: 12px;
+  }
+  .week-tabs-list {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .week-tab {
+    min-height: 52px;
+    padding: 6px 8px;
+    border-bottom: 0;
+  }
+
+  .week-tab:nth-child(2n) {
+    border-right: 1px solid color-mix(in srgb, var(--line-strong) 58%, var(--line));
+  }
+
+  .week-tab > strong,
+  .week-tab-shop {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+  html {
+    scroll-padding-bottom: 88px;
   }
 }
 
@@ -3143,7 +3286,7 @@
     grid-column: auto;
   }
   .planner-shell {
-    width: min(100% - 20px, 650px);
+    width: min(100% - 32px, 650px);
   }
 
   .site-header {
@@ -3193,9 +3336,6 @@
   .recipe-actions button {
     flex: 1 1 auto;
   }
-}
-
-@media (max-width: 380px) {
   .theme-control {
     grid-template-columns: 84px;
   }
@@ -3227,13 +3367,4 @@
     opacity: 0;
     transform: translateY(10px);
   }
-}
-
-.print-menu {
-  display: none;
-}
-
-/* One clear button in search: the app's own, not the browser's as well. */
-.search-field input::-webkit-search-cancel-button {
-  appearance: none;
 }

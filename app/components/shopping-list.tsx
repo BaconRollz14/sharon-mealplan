@@ -62,6 +62,7 @@ interface ShoppingListProps {
   onRemoveFreshnessLot?: (lotId: string) => void;
   onOptimiseFreshness?: () => void;
   onShare?: () => void;
+  onSetSection?: (keys: string[], checked: boolean, sectionTitle: string) => void;
 }
 
 type DisplayItem = {
@@ -95,6 +96,7 @@ export const ShoppingList = memo(function ShoppingList({
   onRemoveFreshnessLot = () => {},
   onOptimiseFreshness = () => {},
   onShare,
+  onSetSection,
 }: ShoppingListProps) {
   const [basketOpen, setBasketOpen] = useState(false);
   const [extraFormOpen, setExtraFormOpen] = useState(false);
@@ -243,7 +245,14 @@ export const ShoppingList = memo(function ShoppingList({
                 const sectionDone = section.items.every(({ key }) => checkedItems.has(key));
                 return (
                   <section className={`shopping-section${sectionDone ? " is-done" : ""}`} key={section.title} aria-labelledby={sectionId}>
-                    <h4 id={sectionId}>{section.title}{sectionDone ? <span className="shopping-section-done"><Check aria-hidden="true" />Done</span> : null}</h4>
+                    <div className="shopping-section-head">
+                      <h4 id={sectionId}>{section.title}{sectionDone ? <span className="shopping-section-done"><Check aria-hidden="true" />Done</span> : null}</h4>
+                      {onSetSection ? (
+                        <button type="button" className="shopping-section-tick" onClick={() => onSetSection(section.items.map(({ key }) => key), !sectionDone, section.title)} aria-label={sectionDone ? `Untick all ${section.title}` : `Tick all ${section.title}`}>
+                          {sectionDone ? "Untick all" : "Tick all"}
+                        </button>
+                      ) : null}
+                    </div>
                     <ul>
                       {section.items.map(({ item, key, isExtra }) => {
                         const checked = checkedItems.has(key);

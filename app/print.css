@@ -1,6 +1,7 @@
 @media print {
-  :root,
-  :root[data-theme="dark"] {
+  /* html:root beats the screen theme blocks, which load after this file. */
+  html:root,
+  html:root[data-theme] {
     --paper: #fff;
     --surface: #fff;
     --surface-strong: #fff;
@@ -76,7 +77,6 @@
   .recipe-detail-media,
   .cooking-mode-hint,
   .cooking-finish,
-  .recipe-loading,
   .shopping-item-move {
     display: none !important;
   }
@@ -109,7 +109,7 @@
 
   .print-menu li {
     display: grid;
-    grid-template-columns: 50mm minmax(0, 1fr) auto;
+    grid-template-columns: max-content minmax(0, 1fr) auto;
     gap: 4mm;
     padding: 2.5mm 0;
     border-bottom: 1px solid var(--line);
@@ -118,7 +118,6 @@
 
   .print-menu strong {
     font-weight: 600;
-    white-space: nowrap;
   }
 
   .print-menu span {

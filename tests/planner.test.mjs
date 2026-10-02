@@ -604,7 +604,11 @@ test("starts on the current cycle week before client hydration", async () => {
 
   assert.equal(initialWeekIndexForDate("2026-09-07"), 1);
   assert.equal(initialWeekIndexForDate("2026-09-28"), 0);
-  assert.match(plannerSource, /useState\(\(\) => initialWeekIndexForDate\(\)\)/);
+  assert.match(plannerSource, /useState\(\(\) => linked\.weekIndex \?\? initialWeekIndexForDate\(\)\)/);
+  const { locationFromParams } = await vite.ssrLoadModule("/app/planner-client.tsx");
+  assert.deepEqual(locationFromParams({ view: "shopping", week: "3", recipe: null }), { weekIndex: 2, view: "shopping", recipeId: null });
+  assert.deepEqual(locationFromParams({ view: "recipes", week: "1", recipe: "w4-r22" }), { weekIndex: 3, view: "recipes", recipeId: "w4-r22" }, "a recipe link opens that recipe's week");
+  assert.deepEqual(locationFromParams({ view: "nope", week: "9", recipe: "bogus" }), { weekIndex: null, view: null, recipeId: null });
 });
 
 test("keeps all meal imagery local, responsive and on-demand cacheable", async () => {
@@ -820,4 +824,29 @@ test("ships home-screen icons, a printable week menu and a three-radius scale", 
   for (const value of radii) assert.match(value, /^(0|50%|999px|(var\(--radius-(control|card|panel)\)|0)( (var\(--radius-(control|card|panel)\)|0))*)$/, `off-scale radius ${value}`);
   const rootNode = postcss.parse(css);
   assert.equal(rootNode.nodes.filter((node) => node.type === "atrule" && node.name === "media").length, new Set(rootNode.nodes.filter((node) => node.type === "atrule" && node.name === "media").map((node) => node.params)).size, "one block per breakpoint");
+});
+
+test("makes reordering visible, cooking full-screen and whole aisles tickable", async () => {
+  const { cookbook } = await vite.ssrLoadModule("/app/cookbook-data.ts");
+  const { ShoppingList } = await vite.ssrLoadModule("/app/components/shopping-list.tsx");
+  const plannerSource = await readFile(path.join(root, "app/planner-client.tsx"), "utf8");
+  const css = await readFile(path.join(root, "app/planner.css"), "utf8");
+  const week = cookbook.weeks[0];
+  const meatKeys = new Set(week.shopping[0].items.map((item) => `w1-${item.id ?? ""}`));
+  const html = renderToStaticMarkup(React.createElement(ShoppingList, {
+    week, checkedItems: new Set(), shoppingCategories: {}, showRemaining: false, priceBasis: "",
+    onToggleItem() {}, onMoveItem() {}, onClearChecked() {}, onShowRemainingChange() {}, onSetSection() {},
+  }));
+  assert.ok(meatKeys.size > 0);
+  assert.match(html, /aria-label="Tick all Meat &amp; fish"/);
+  assert.match(html, /aria-labelledby="shopping-section-w1-meat-fish"/);
+
+  assert.match(plannerSource, /<div className="reorder-bar" role="region" aria-label="Reordering dinners">/);
+  assert.match(plannerSource, /id="reorder-done"/);
+  assert.match(plannerSource, /aria-label=\{`Move \$\{meal\.name\} to another day`\}/);
+  assert.match(plannerSource, /currentOrder\.splice\(to, 0, \.\.\.currentOrder\.splice\(from, 1\)\)/);
+  assert.match(plannerSource, /planner-shell\$\{cookingMode && selectedEntry \? " is-cooking" : ""\}/);
+  assert.match(plannerSource, />Exit cooking</);
+  assert.match(css, /\.planner-shell\.is-cooking \.recipe-detail-media/);
+  assert.equal(finalRuleDeclarations(css, ".week-tabs-list", "(max-width: 780px)")?.["grid-template-columns"], "repeat(4, minmax(0, 1fr))");
 });

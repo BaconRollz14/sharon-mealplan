@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowDown,
@@ -37,7 +37,8 @@ import {
 } from "@/components/ui/empty";
 import { cookbook, type Recipe } from "./cookbook-data";
 import { PwaRegister } from "./components/pwa-register";
-import type { ExtraShoppingItem } from "./components/shopping-list";
+import { RecipeDetail } from "./components/recipe-detail";
+import { ShoppingList, type ExtraShoppingItem } from "./components/shopping-list";
 import { ThemeToggle } from "./components/theme-toggle";
 import { WeekSelector } from "./components/week-selector";
 import { getMealImage, handleMealImageError, type MealImage } from "./meal-images";
@@ -62,12 +63,6 @@ import {
   validateCookbook,
 } from "./planner-utils";
 
-// The recipe reader and the shopping list are not needed for the first paint, so they
-// load as separate chunks (prefetched once the page is idle so they also work offline).
-const loadRecipeDetail = () => import("./components/recipe-detail");
-const loadShoppingList = () => import("./components/shopping-list");
-const RecipeDetail = lazy(() => loadRecipeDetail().then((module) => ({ default: module.RecipeDetail })));
-const ShoppingList = lazy(() => loadShoppingList().then((module) => ({ default: module.ShoppingList })));
 const NO_EXTRA_ITEMS: ExtraShoppingItem[] = [];
 
 type PlannerView = "recipes" | "shopping";
@@ -289,12 +284,31 @@ function estimatedCheckoutTotal(week: (typeof weeklyPlans)[number], extras: Extr
   return Math.round((week.checkoutTotal + extrasTotal) * 100) / 100;
 }
 
-export function PlannerClient() {
-  const [activeWeekIndex, setActiveWeekIndex] = useState(() => initialWeekIndexForDate());
-  const [activeView, setActiveView] = useState<PlannerView>("recipes");
+export interface PlannerLocation {
+  view: string | null;
+  week: string | null;
+  recipe: string | null;
+}
+
+/** The week, view and recipe a URL asks for, resolved the same way on the server and in the browser. */
+export function locationFromParams({ view, week, recipe }: PlannerLocation) {
+  const recipeId = recipe && allRecipeIds.has(recipe) ? recipe : null;
+  const recipeWeekIndex = recipeId ? weeklyPlans.findIndex((plan) => plan.meals.some((meal) => meal.id === recipeId)) : -1;
+  const urlWeekIndex = weeklyPlans.findIndex((plan) => plan.number === Number(week));
+  return {
+    weekIndex: recipeWeekIndex >= 0 ? recipeWeekIndex : urlWeekIndex >= 0 ? urlWeekIndex : null,
+    view: isPlannerView(view) ? view : null,
+    recipeId,
+  };
+}
+
+export function PlannerClient({ initialLocation }: { initialLocation?: PlannerLocation } = {}) {
+  const [linked] = useState(() => locationFromParams(initialLocation ?? { view: null, week: null, recipe: null }));
+  const [activeWeekIndex, setActiveWeekIndex] = useState(() => linked.weekIndex ?? initialWeekIndexForDate());
+  const [activeView, setActiveView] = useState<PlannerView>(linked.view ?? "recipes");
   const [isDark, setIsDark] = useState(false);
   const [query, setQuery] = useState("");
-  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(null);
+  const [selectedRecipeId, setSelectedRecipeId] = useState<string | null>(linked.recipeId);
   const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
   const [cookedRecipeIds, setCookedRecipeIds] = useState<Set<string>>(new Set());
   const [favouriteRecipeIds, setFavouriteRecipeIds] = useState<Set<string>>(new Set());
@@ -323,6 +337,7 @@ export function PlannerClient() {
   const initialUrlAppliedRef = useRef(false);
   const autoWeekRef = useRef<number | null>(null);
   const pendingMoveFirstActionRef = useRef<HTMLButtonElement | null>(null);
+  const focusReorderDoneRef = useRef(false);
   const flipFromRef = useRef<Map<string, { x: number; y: number }> | null>(null);
 
   const currentLocalState = useMemo<LocalPlannerState>(() => ({
@@ -341,11 +356,6 @@ export function PlannerClient() {
     methodProgress: Object.fromEntries(Object.entries(methodProgress).map(([key, value]) => [key, [...value]])),
     freshnessLots: Object.fromEntries(Object.entries(freshnessLots).map(([key, value]) => [key, [...value]])),
   }), [activeView, activeWeekIndex, checkedItems, cookedRecipeIds, extraShoppingItems, favouriteRecipeIds, freshnessLots, isDark, mealOrders, mealRatings, methodProgress, selectedRecipeId, shoppingCategories, showRemaining]);
-
-  useEffect(() => {
-    const idle = window.requestIdleCallback ?? ((callback: () => void) => window.setTimeout(callback, 1_500));
-    idle(() => { void loadRecipeDetail(); void loadShoppingList(); });
-  }, []);
 
   useEffect(() => {
     const refreshToday = () => setTodayISO(localTodayISO());
@@ -511,23 +521,25 @@ export function PlannerClient() {
     };
   }, [cookingMode, selectedRecipeId]);
 
+  const jumpToNextStep = useCallback(() => {
+    const step = document.querySelector<HTMLElement>(".method-list li.is-next, .cooking-finish");
+    if (!step) return false;
+    step.scrollIntoView({ block: "center" });
+    step.querySelector<HTMLElement>("input, button")?.focus({ preventScroll: true });
+    return true;
+  }, []);
+
   useEffect(() => {
     // Entering cooking mode lands on the step to do next, not on the photo.
     if (!cookingMode || !selectedRecipeId) return;
     let frame = 0;
     let attempts = 0;
     const land = () => {
-      const step = document.querySelector<HTMLElement>(".method-list li.is-next, .cooking-finish");
-      if (!step) {
-        if (attempts++ < 30) frame = window.requestAnimationFrame(land);
-        return;
-      }
-      step.scrollIntoView({ block: "center" });
-      step.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true });
+      if (!jumpToNextStep() && attempts++ < 30) frame = window.requestAnimationFrame(land);
     };
     frame = window.requestAnimationFrame(() => { frame = window.requestAnimationFrame(land); });
     return () => window.cancelAnimationFrame(frame);
-  }, [cookingMode, selectedRecipeId]);
+  }, [cookingMode, jumpToNextStep, selectedRecipeId]);
 
   useEffect(() => {
     if (!pendingMealMove) return;
@@ -692,7 +704,8 @@ export function PlannerClient() {
     setCookingMode(false);
     setQuery("");
     setIsReordering(next);
-    setStatusMessage(next ? "Reorder mode on. Use Earlier or Later on a dinner." : "Reorder mode off.");
+    setStatusMessage(next ? "Reordering dinners. Move a dinner to another day, then choose Done." : "Dinner order saved.");
+    focusReorderDoneRef.current = next;
   };
 
   const closeRecipe = (recipe: Recipe) => {
@@ -733,6 +746,15 @@ export function PlannerClient() {
       else next.add(key);
       return next;
     });
+  }, []);
+
+  const setSectionChecked = useCallback((keys: string[], checked: boolean, sectionTitle: string) => {
+    setCheckedItems((current) => {
+      const next = new Set(current);
+      keys.forEach((key) => { if (checked) next.add(key); else next.delete(key); });
+      return next;
+    });
+    setStatusMessage(checked ? `Everything in ${sectionTitle} ticked.` : `${sectionTitle} unticked.`);
   }, []);
 
   const clearCheckedForWeek = useCallback(() => {
@@ -878,12 +900,12 @@ export function PlannerClient() {
     setStatusMessage("Dinner move cancelled.");
   };
 
-  const moveMeal = (recipeId: string, direction: -1 | 1) => {
+  const moveMealTo = (recipeId: string, to: number) => {
     const currentOrder = [...activeOrder];
     const from = currentOrder.indexOf(recipeId);
-    const to = from + direction;
-    if (from < 0 || to < 0 || to >= currentOrder.length) return;
-    [currentOrder[from], currentOrder[to]] = [currentOrder[to], currentOrder[from]];
+    if (from < 0 || to < 0 || to >= currentOrder.length || to === from) return;
+    // Lift the dinner out and drop it on the chosen day; the days in between shift by one.
+    currentOrder.splice(to, 0, ...currentOrder.splice(from, 1));
     const evaluation = validateSchedule({ week: activeWeek, weekStartISO: activeWeekInstanceKey, order: currentOrder, lots: activeFreshnessLots });
     if (hasExpiryConflict(evaluation)) {
       setPendingMealMove({ order: currentOrder, evaluation });
@@ -891,8 +913,10 @@ export function PlannerClient() {
       return;
     }
     storeMealOrder(currentOrder);
-    setStatusMessage("Dinner order updated and saved to the planner.");
+    setStatusMessage(`Dinner moved to ${activeMeals[to]?.displayDay ?? "its new day"}.`);
   };
+
+  const moveMeal = (recipeId: string, direction: -1 | 1) => moveMealTo(recipeId, activeOrder.indexOf(recipeId) + direction);
 
   const resetMealOrder = () => {
     const originalOrder = assignedMeals(activeWeek).map(({ recipe }) => recipe.id);
@@ -979,7 +1003,7 @@ export function PlannerClient() {
   };
 
   return (
-    <div className="planner-shell" data-active-view={activeView}>
+    <div className={`planner-shell${cookingMode && selectedEntry ? " is-cooking" : ""}`} data-active-view={activeView}>
       <PwaRegister />
       <div className="print-brand" aria-hidden="true"><strong>Sharon Meal Plan</strong><span>Our four-week family meal planner</span></div>
       <a href="#planner" className="skip-link">Skip to this week&apos;s plan</a>
@@ -1059,7 +1083,17 @@ export function PlannerClient() {
                       <DropdownMenuTrigger asChild>
                         <button type="button" className="icon-text-button toolbar-more" aria-label="More planner actions"><MoreHorizontal aria-hidden="true" /><span>More</span></button>
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="planner-action-menu">
+                      <DropdownMenuContent
+                        align="end"
+                        className="planner-action-menu"
+                        onCloseAutoFocus={(event) => {
+                          // Starting reorder mode hands focus to its Done button, not back to More.
+                          if (!focusReorderDoneRef.current) return;
+                          focusReorderDoneRef.current = false;
+                          event.preventDefault();
+                          document.getElementById("reorder-done")?.focus();
+                        }}
+                      >
                         <DropdownMenuItem onSelect={shareCurrent}><Share2 aria-hidden="true" />Share link</DropdownMenuItem>
                         <DropdownMenuItem onSelect={toggleReordering}>
                           <GripVertical aria-hidden="true" />{isReordering ? "Stop reordering" : "Reorder dinners"}
@@ -1081,19 +1115,22 @@ export function PlannerClient() {
             {selectedEntry ? (
               <section id="recipe-reader" className="recipe-reader" aria-label={`${selectedEntry.recipe.name} recipe`}>
                 <div className={`recipe-reader-toolbar${cookingMode ? " is-cooking" : ""}`}>
-                  <button ref={readerBackRef} type="button" className="button button-secondary recipe-reader-back" onClick={() => closeRecipe(selectedEntry.recipe)}>
-                    <ArrowLeft aria-hidden="true" />{cookingMode ? "Back" : "Back to meals"}
-                  </button>
                   {cookingMode ? (
                     <>
-                      <span className="cooking-progress">{selectedNextStep < 0 ? "All steps done" : `Step ${selectedNextStep + 1} of ${selectedEntry.recipe.method.length}`}</span>
-                      <button type="button" className="button button-secondary" onClick={() => setCookingMode(false)}>Exit</button>
+                      <button type="button" className="cooking-progress" onClick={jumpToNextStep} aria-label={selectedNextStep < 0 ? "All steps done. Go to the end of the method" : `Go to step ${selectedNextStep + 1} of ${selectedEntry.recipe.method.length}`}>
+                        {selectedNextStep < 0 ? "All steps done" : `Step ${selectedNextStep + 1} of ${selectedEntry.recipe.method.length}`}
+                      </button>
+                      <button type="button" className="button button-secondary" onClick={() => setCookingMode(false)}><X aria-hidden="true" />Exit cooking</button>
                     </>
                   ) : (
-                    <span>Week {selectedEntry.weekIndex + 1} · {selectedEntry.displayDay} · {readableMealDate(selectedEntry.mealDate)}</span>
+                    <>
+                      <button ref={readerBackRef} type="button" className="button button-secondary recipe-reader-back" onClick={() => closeRecipe(selectedEntry.recipe)}>
+                        <ArrowLeft aria-hidden="true" />Back to meals
+                      </button>
+                      <span>Week {selectedEntry.weekIndex + 1} · {selectedEntry.displayDay} · {readableMealDate(selectedEntry.mealDate)}</span>
+                    </>
                   )}
                 </div>
-                <Suspense fallback={<div className="recipe-loading" role="status">Opening the recipe…</div>}>
                 <RecipeDetail
                   key={selectedEntry.recipe.id}
                   recipe={selectedEntry.recipe}
@@ -1111,7 +1148,6 @@ export function PlannerClient() {
                   onToggleCookingMode={toggleCookingMode}
                   onToggleStep={toggleSelectedStep}
                 />
-                </Suspense>
               </section>
             ) : (
               <>
@@ -1150,6 +1186,16 @@ export function PlannerClient() {
                     <button type="button" className="button button-secondary" onClick={() => setQuery("")}>Clear search</button>
                   </Empty>
                 ) : (
+                  <>
+                  {isReordering && !query ? (
+                    <div className="reorder-bar" role="region" aria-label="Reordering dinners">
+                      <p><strong>Reordering Week {activeWeek.number}.</strong> Move a dinner to another day; changes save as you go.</p>
+                      <div className="reorder-bar-actions">
+                        {mealOrders[activeWeekInstanceKey] ? <button type="button" className="button button-secondary" onClick={resetMealOrder}><RotateCcw aria-hidden="true" />Reset order</button> : null}
+                        <button id="reorder-done" type="button" className="button button-primary" onClick={toggleReordering}>Done</button>
+                      </div>
+                    </div>
+                  ) : null}
                   <div className={`recipe-grid${gridEntries.length === 6 ? " has-six" : ""}`} aria-label={query ? "Matching cookbook dinners" : "Dinners this week"}>
                     {gridEntries.map((entry, index) => {
                       const meal = entry.recipe;
@@ -1197,24 +1243,29 @@ export function PlannerClient() {
                           </button>
 
                           {isReordering && !query && (
-                            <div className="reorder-controls" aria-label={`Move ${meal.name}`}>
+                            <div className="reorder-controls" role="group" aria-label={`Move ${meal.name}`}>
                               <button type="button" onClick={() => moveMeal(meal.id, -1)} disabled={index === 0} aria-label={`Move ${meal.name} earlier`}><ArrowUp aria-hidden="true" />Earlier</button>
                               <button type="button" onClick={() => moveMeal(meal.id, 1)} disabled={index === gridEntries.length - 1} aria-label={`Move ${meal.name} later`}><ArrowDown aria-hidden="true" />Later</button>
+                              <label className="reorder-move-to">
+                                <span>Move to</span>
+                                <select value={index} onChange={(event) => moveMealTo(meal.id, Number(event.target.value))} aria-label={`Move ${meal.name} to another day`}>
+                                  {activeMeals.map(({ displayDay }, dayIndex) => <option key={displayDay} value={dayIndex}>{displayDay}</option>)}
+                                </select>
+                              </label>
                             </div>
                           )}
                         </div>
                       );
                     })}
                   </div>
+                  </>
                 )}
               </>
             )}
           </TabsContent>
 
           <TabsContent value="shopping" className="plan-content shopping-tab-content">
-            <Suspense fallback={<div className="recipe-loading" role="status">Opening the shopping list…</div>}>
-            <ShoppingList key={activeWeekInstanceKey} week={activeWeek} checkedItems={checkedItems} shoppingCategories={shoppingCategories} extraItems={extraShoppingItems[activeWeek.number] ?? NO_EXTRA_ITEMS} showRemaining={showRemaining} priceBasis={cookbook.priceBasis} canUndo={Boolean(undoCheckedItems)} onToggleItem={toggleShoppingItem} onMoveItem={moveShoppingItem} onMoveExtraItem={moveExtraShoppingItem} onAddExtraItem={addExtraShoppingItem} onRemoveExtraItem={removeExtraShoppingItem} onClearChecked={clearCheckedForWeek} onUndo={undoClearChecked} onShowRemainingChange={setShowRemaining} weekStartISO={activeWeekInstanceKey} freshnessLots={activeFreshnessLots} freshnessEvaluation={activeFreshnessEvaluation} onAddFreshnessLot={addFreshnessLot} onUpdateFreshnessLot={updateFreshnessLot} onRemoveFreshnessLot={removeFreshnessLot} onOptimiseFreshness={optimiseActiveWeek} onShare={shareCurrent} />
-            </Suspense>
+            <ShoppingList key={activeWeekInstanceKey} week={activeWeek} checkedItems={checkedItems} shoppingCategories={shoppingCategories} extraItems={extraShoppingItems[activeWeek.number] ?? NO_EXTRA_ITEMS} showRemaining={showRemaining} priceBasis={cookbook.priceBasis} canUndo={Boolean(undoCheckedItems)} onToggleItem={toggleShoppingItem} onMoveItem={moveShoppingItem} onMoveExtraItem={moveExtraShoppingItem} onAddExtraItem={addExtraShoppingItem} onRemoveExtraItem={removeExtraShoppingItem} onClearChecked={clearCheckedForWeek} onUndo={undoClearChecked} onShowRemainingChange={setShowRemaining} weekStartISO={activeWeekInstanceKey} freshnessLots={activeFreshnessLots} freshnessEvaluation={activeFreshnessEvaluation} onAddFreshnessLot={addFreshnessLot} onUpdateFreshnessLot={updateFreshnessLot} onRemoveFreshnessLot={removeFreshnessLot} onOptimiseFreshness={optimiseActiveWeek} onShare={shareCurrent} onSetSection={setSectionChecked} />
           </TabsContent>
         </Tabs>
       </section>
