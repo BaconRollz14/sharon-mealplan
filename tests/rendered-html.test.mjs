@@ -33,7 +33,8 @@ test("renders Sharon Meal Plan metadata", async () => {
   );
   const html = (await response.text()).replace(/<!--.*?-->/g, "");
   for (const pattern of plannerMetadata) assert.match(html, pattern);
-  assert.match(html, /Dinner, decided/);
+  assert.doesNotMatch(html, /Dinner, decided/);
+  assert.match(html, /<h1 class="brand">/);
   assert.match(html, /Sharon Meal Plan/);
   const cycleStart = Date.UTC(2026, 7, 31);
   const today = new Date();
@@ -43,6 +44,6 @@ test("renders Sharon Meal Plan metadata", async () => {
   assert.match(html, new RegExp(`Week ${weekIndex + 1} (?:—|&mdash;) ${weekTitles[weekIndex]}`));
   assert.doesNotMatch(html, /<img[^>]+https?:\/\//i);
   assert.doesNotMatch(html, /<source[^>]+https?:\/\//i);
-  assert.match(html, /Creamy chicken and mushroom pasta|Sausages, mash, peas and onion gravy|Chicken and pepper wraps/);
+  assert.ok((html.match(/class="meal-card-title"/g) ?? []).length >= 6, "the week's dinners render on the server");
   assert.doesNotMatch(html, /Setting the table/);
 });

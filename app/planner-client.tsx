@@ -11,10 +11,12 @@ import {
   MoreHorizontal,
   Printer,
   RotateCcw,
+  ChefHat,
   Search,
   Share2,
   ShieldAlert,
   ShoppingBasket,
+  Star,
   UtensilsCrossed,
   X,
 } from "lucide-react";
@@ -36,11 +38,10 @@ import {
 import { cookbook, type Recipe } from "./cookbook-data";
 import { PwaRegister } from "./components/pwa-register";
 import { RecipeDetail } from "./components/recipe-detail";
-import { MealRating } from "./components/meal-rating";
 import { ShoppingList, type ExtraShoppingItem } from "./components/shopping-list";
 import { ThemeToggle } from "./components/theme-toggle";
 import { WeekSelector } from "./components/week-selector";
-import { getMealImage, handleMealImageError } from "./meal-images";
+import { getMealImage, handleMealImageError, type MealImage } from "./meal-images";
 import {
   hasExpiryConflict,
   isValidPurchasedLot,
@@ -539,6 +540,18 @@ export function PlannerClient() {
     };
   }, [currentCyclePosition.cycleIndex, mealOrders, selectedRecipeId]);
 
+  const tonightEntry = useMemo<RecipeEntry | null>(() => {
+    const weekIndex = currentCyclePosition.weekIndex;
+    const weekKey = weekInstanceKeyForCurrentCycle(weekIndex, currentCyclePosition.cycleIndex);
+    const match = assignedMeals(weeklyPlans[weekIndex], mealOrders[weekKey])
+      .find(({ dateOffset }) => addDaysISO(weekKey, dateOffset) === todayISO);
+    return match ? { recipe: match.recipe, weekIndex, displayDay: match.displayDay, mealDate: todayISO } : null;
+  }, [currentCyclePosition.cycleIndex, currentCyclePosition.weekIndex, mealOrders, todayISO]);
+  const showTonight = Boolean(tonightEntry) && activeView === "recipes" && !selectedEntry && !query && !isReordering;
+  const gridEntries = showTonight && tonightEntry
+    ? recipeEntries.filter((entry) => entry.recipe.id !== tonightEntry.recipe.id)
+    : recipeEntries;
+
   const activeOrder = useMemo(() => activeMeals.map(({ recipe }) => recipe.id), [activeMeals]);
   const activeFreshnessLots = useMemo(() => freshnessLots[activeWeekInstanceKey] ?? [], [activeWeekInstanceKey, freshnessLots]);
   const activeFreshnessEvaluation = useMemo(
@@ -574,6 +587,12 @@ export function PlannerClient() {
       document.getElementById("recipe-reader")?.scrollIntoView({ block: "start" });
       readerBackRef.current?.focus();
     });
+  };
+
+  const startCooking = (entry: RecipeEntry) => {
+    selectRecipe(entry);
+    setCookingMode(true);
+    setStatusMessage(`${entry.recipe.name} opened in cooking mode.`);
   };
 
   const toggleReordering = () => {
@@ -881,27 +900,26 @@ export function PlannerClient() {
       ) : null}
 
       <header className="site-header">
-        <a className="brand" href="#planner" aria-label="Sharon Meal Plan meal planner">
+        <h1 className="brand">
           <span className="brand-mark" aria-hidden="true">SM</span>
-          <span><strong>Sharon Meal Plan</strong><small>Our four-week meal planner</small></span>
-        </a>
+          <span className="brand-name">Sharon Meal Plan</span>
+        </h1>
         <div className="header-actions">
           <ThemeToggle isDark={isDark} onChange={updateTheme} />
         </div>
       </header>
 
       <main id="main-content">
-      <section className="planner-intro" aria-labelledby="page-title">
-        <picture>
-          <source type="image/avif" srcSet="/family-dinner-hero-720.avif 720w, /family-dinner-hero-1280.avif 1280w, /family-dinner-hero-1672.avif 1672w" sizes="(max-width: 780px) calc(100vw - 28px), 75vw" />
-          <source type="image/webp" srcSet="/family-dinner-hero-720.webp 720w, /family-dinner-hero-1280.webp 1280w, /family-dinner-hero-1672.webp 1672w" sizes="(max-width: 780px) calc(100vw - 28px), 75vw" />
-          <img src="/family-dinner-hero.png" width="1672" height="941" alt="A family dinner laid out on a kitchen table" className="hero-image" fetchPriority="high" decoding="async" />
-        </picture>
-        <div className="intro-content">
-          <h1 id="page-title">Dinner, decided.</h1>
-          <p>Four practical weeks of family meals, recipes and organised shops.</p>
-        </div>
-      </section>
+      {showTonight && tonightEntry ? (
+        <TonightCard
+          entry={tonightEntry}
+          image={getMealImage(tonightEntry.recipe.recipeNumber, tonightEntry.recipe.name)}
+          isCooked={cookedRecipeIds.has(tonightEntry.recipe.id)}
+          stepsDone={methodProgress[tonightEntry.recipe.id]?.length ?? 0}
+          onOpen={() => selectRecipe(tonightEntry)}
+          onCook={() => startCooking(tonightEntry)}
+        />
+      ) : null}
 
       <WeekSelector weeks={weeklyPlans} activeIndex={activeWeekIndex} onChange={changeWeek} />
 
@@ -923,25 +941,25 @@ export function PlannerClient() {
               </TabsList>
               <div className="toolbar-actions">
                 <button type="button" className="icon-text-button" onClick={printPlanner} aria-label={activeView === "shopping" ? "Print shopping list" : "Print recipe"} disabled={activeView === "recipes" && !selectedEntry}><Printer aria-hidden="true" /><span>Print</span></button>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button type="button" className="icon-text-button toolbar-more" aria-label="More planner actions"><MoreHorizontal aria-hidden="true" /><span>More</span></button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="planner-action-menu">
-                    <DropdownMenuItem onSelect={shareCurrent}><Share2 aria-hidden="true" />Share link</DropdownMenuItem>
-                    {activeView === "recipes" ? (
-                      <>
+                {activeView === "recipes" ? (
+                  <>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <button type="button" className="icon-text-button toolbar-more" aria-label="More planner actions"><MoreHorizontal aria-hidden="true" /><span>More</span></button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="planner-action-menu">
+                        <DropdownMenuItem onSelect={shareCurrent}><Share2 aria-hidden="true" />Share link</DropdownMenuItem>
                         <DropdownMenuItem onSelect={toggleReordering}>
                           <GripVertical aria-hidden="true" />{isReordering ? "Stop reordering" : "Reorder dinners"}
                         </DropdownMenuItem>
                         {mealOrders[activeWeekInstanceKey] && !query ? <DropdownMenuItem onSelect={resetMealOrder}><RotateCcw aria-hidden="true" />Reset order</DropdownMenuItem> : null}
-                      </>
-                    ) : null}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <div className="weekly-cost" aria-label={`Week ${activeWeek.number} estimated shop total ${money.format(activeCheckoutTotal)}`}>
-                  <span>Estimated shop</span><strong>{money.format(activeCheckoutTotal)}</strong>
-                </div>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <div className="weekly-cost" aria-label={`Week ${activeWeek.number} estimated shop total ${money.format(activeCheckoutTotal)}`}>
+                      <span>Estimated shop</span><strong>{money.format(activeCheckoutTotal)}</strong>
+                    </div>
+                  </>
+                ) : null}
               </div>
             </div>
           </div>
@@ -975,15 +993,14 @@ export function PlannerClient() {
             ) : (
               <>
                 <div className="recipe-controls">
-                  <h3>This week&apos;s dinners</h3>
+                  <h3 className="sr-only">{query ? "Search results" : "This week's dinners"}</h3>
                   <div className="recipe-search">
                     <div className="search-field">
                       <Search aria-hidden="true" />
                       <label className="sr-only" htmlFor="recipe-search">Search recipes or ingredients across all four weeks</label>
-                      <Input id="recipe-search" type="search" value={query} onChange={(event) => { setQuery(event.target.value); setIsReordering(false); }} placeholder="Search all four weeks by dish or ingredient" aria-describedby="recipe-search-help" />
+                      <Input id="recipe-search" type="search" value={query} onChange={(event) => { setQuery(event.target.value); setIsReordering(false); }} placeholder="Search all four weeks by dish or ingredient" />
                       {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search"><X aria-hidden="true" /></button>}
                     </div>
-                    <p id="recipe-search-help" className="search-help">Searches all four weeks by meal, ingredient or day.</p>
                   </div>
                 </div>
 
@@ -1001,16 +1018,18 @@ export function PlannerClient() {
                     <button type="button" className="button button-secondary" onClick={() => setQuery("")}>Clear search</button>
                   </Empty>
                 ) : (
-                  <div className="recipe-grid" aria-label={query ? "Matching cookbook dinners" : "Dinners this week"}>
-                    {recipeEntries.map((entry, index) => {
+                  <div className={`recipe-grid${gridEntries.length === 6 ? " has-six" : ""}`} aria-label={query ? "Matching cookbook dinners" : "Dinners this week"}>
+                    {gridEntries.map((entry, index) => {
                       const meal = entry.recipe;
                       const mealImage = getMealImage(meal.recipeNumber, meal.name);
                       const isFavourite = favouriteRecipeIds.has(meal.id);
                       const isCooked = cookedRecipeIds.has(meal.id);
                       const cardId = `meal-card-${meal.id}`;
+                      const rating = mealRatings[meal.id] ?? 0;
+                      const isPast = !query && entry.mealDate < todayISO;
                       const stateText = [entry.mealDate === todayISO ? "Today" : "", isFavourite ? "Favourite" : "", isCooked ? "Cooked" : ""].filter(Boolean).join(", ");
                       return (
-                        <div className="meal-card-group" key={meal.id} ref={(node) => { cardRefs.current[meal.id] = node; }}>
+                        <div className={`meal-card-group${isPast ? " is-past" : ""}`} key={meal.id} ref={(node) => { cardRefs.current[meal.id] = node; }}>
                           <button type="button" id={cardId} onClick={() => selectRecipe(entry)} className="meal-card" aria-labelledby={`${cardId}-day ${cardId}-title ${cardId}-state`} aria-describedby={`${cardId}-description ${cardId}-meta`}>
                             <span className="meal-card-image" aria-hidden="true">
                               <picture>
@@ -1039,18 +1058,16 @@ export function PlannerClient() {
                             </span>
                             <span className="meal-card-title" id={`${cardId}-title`}>{meal.name}</span>
                             <span className="meal-card-description" id={`${cardId}-description`}>{meal.description}</span>
-                            <span className="meal-meta" id={`${cardId}-meta`}><span>{formatMinutes(totalMinutes(meal))} total</span></span>
+                            <span className="meal-meta" id={`${cardId}-meta`}>
+                              <span>{formatMinutes(totalMinutes(meal))}</span>
+                              {rating ? <span className="meal-rating-inline"><Star aria-hidden="true" fill="currentColor" /><span aria-hidden="true">{rating}</span><span className="sr-only">Rated {rating} out of 5</span></span> : null}
+                            </span>
                           </button>
-                          <MealRating
-                            mealName={meal.name}
-                            rating={mealRatings[meal.id] ?? 0}
-                            readOnly
-                          />
 
                           {isReordering && !query && (
                             <div className="reorder-controls" aria-label={`Move ${meal.name}`}>
                               <button type="button" onClick={() => moveMeal(meal.id, -1)} disabled={index === 0} aria-label={`Move ${meal.name} earlier`}><ArrowUp aria-hidden="true" />Earlier</button>
-                              <button type="button" onClick={() => moveMeal(meal.id, 1)} disabled={index === recipeEntries.length - 1} aria-label={`Move ${meal.name} later`}><ArrowDown aria-hidden="true" />Later</button>
+                              <button type="button" onClick={() => moveMeal(meal.id, 1)} disabled={index === gridEntries.length - 1} aria-label={`Move ${meal.name} later`}><ArrowDown aria-hidden="true" />Later</button>
                             </div>
                           )}
                         </div>
@@ -1063,7 +1080,7 @@ export function PlannerClient() {
           </TabsContent>
 
           <TabsContent value="shopping" className="plan-content shopping-tab-content">
-            <ShoppingList key={activeWeekInstanceKey} week={activeWeek} checkedItems={checkedItems} shoppingCategories={shoppingCategories} extraItems={extraShoppingItems[activeWeek.number] ?? []} showRemaining={showRemaining} priceBasis={cookbook.priceBasis} canUndo={Boolean(undoCheckedItems)} onToggleItem={toggleShoppingItem} onMoveItem={moveShoppingItem} onMoveExtraItem={moveExtraShoppingItem} onAddExtraItem={addExtraShoppingItem} onRemoveExtraItem={removeExtraShoppingItem} onClearChecked={clearCheckedForWeek} onUndo={undoClearChecked} onShowRemainingChange={setShowRemaining} weekStartISO={activeWeekInstanceKey} freshnessLots={activeFreshnessLots} freshnessEvaluation={activeFreshnessEvaluation} onAddFreshnessLot={addFreshnessLot} onUpdateFreshnessLot={updateFreshnessLot} onRemoveFreshnessLot={removeFreshnessLot} onOptimiseFreshness={optimiseActiveWeek} />
+            <ShoppingList key={activeWeekInstanceKey} week={activeWeek} checkedItems={checkedItems} shoppingCategories={shoppingCategories} extraItems={extraShoppingItems[activeWeek.number] ?? []} showRemaining={showRemaining} priceBasis={cookbook.priceBasis} canUndo={Boolean(undoCheckedItems)} onToggleItem={toggleShoppingItem} onMoveItem={moveShoppingItem} onMoveExtraItem={moveExtraShoppingItem} onAddExtraItem={addExtraShoppingItem} onRemoveExtraItem={removeExtraShoppingItem} onClearChecked={clearCheckedForWeek} onUndo={undoClearChecked} onShowRemainingChange={setShowRemaining} weekStartISO={activeWeekInstanceKey} freshnessLots={activeFreshnessLots} freshnessEvaluation={activeFreshnessEvaluation} onAddFreshnessLot={addFreshnessLot} onUpdateFreshnessLot={updateFreshnessLot} onRemoveFreshnessLot={removeFreshnessLot} onOptimiseFreshness={optimiseActiveWeek} onShare={shareCurrent} />
           </TabsContent>
         </Tabs>
       </section>
@@ -1074,5 +1091,45 @@ export function PlannerClient() {
         <p>{cookbook.costMeaning}</p>
       </footer>
     </div>
+  );
+}
+
+interface TonightCardProps {
+  entry: RecipeEntry;
+  image: MealImage;
+  isCooked: boolean;
+  stepsDone: number;
+  onOpen: () => void;
+  onCook: () => void;
+}
+
+function TonightCard({ entry, image, isCooked, stepsDone, onOpen, onCook }: TonightCardProps) {
+  const { recipe } = entry;
+  const stepCount = recipe.method.length;
+  const inProgress = !isCooked && stepsDone > 0 && stepsDone < stepCount;
+  return (
+    <section className={`tonight-card${isCooked ? " is-cooked" : ""}`} aria-labelledby="tonight-title">
+      <div className="tonight-image" aria-hidden="true">
+        <picture>
+          {image.srcSet ? <source type="image/webp" srcSet={image.srcSet} sizes="(max-width: 780px) 100vw, 560px" /> : null}
+          <img src={image.src} srcSet={image.fallbackSrcSet || undefined} alt="" fetchPriority="high" decoding="async" sizes="(max-width: 780px) 100vw, 560px" onError={handleMealImageError} />
+        </picture>
+      </div>
+      <div className="tonight-body">
+        <h2 id="tonight-title"><span className="tonight-when">Tonight</span> <span className="tonight-name">{recipe.name}</span></h2>
+        <p className="tonight-meta">
+          {entry.displayDay} · {formatMinutes(totalMinutes(recipe))}
+          {isCooked ? <> · <span className="tonight-done">Cooked</span></> : inProgress ? <> · Step {stepsDone + 1} of {stepCount}</> : null}
+        </p>
+        <div className="tonight-actions">
+          {isCooked ? null : (
+            <button type="button" className="button button-primary" onClick={onCook}>
+              <ChefHat aria-hidden="true" />{inProgress ? "Carry on cooking" : "Start cooking"}
+            </button>
+          )}
+          <button type="button" className={`button ${isCooked ? "button-primary" : "button-secondary"}`} onClick={onOpen}>Open recipe</button>
+        </div>
+      </div>
+    </section>
   );
 }

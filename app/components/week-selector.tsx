@@ -11,12 +11,7 @@ interface WeekSelectorProps {
 
 export function WeekSelector({ weeks, activeIndex, onChange }: WeekSelectorProps) {
   return (
-    <section className="week-overview" aria-labelledby="all-weeks-title">
-      <div className="week-overview-copy">
-        <div>
-          <h2 id="all-weeks-title">Your four weeks</h2>
-        </div>
-      </div>
+    <nav className="week-overview" aria-label="Meal-plan weeks">
       <div className="week-tabs" role="group" aria-label="Choose a meal-plan week">
         <div className="week-tabs-list">
           {weeks.map((week, index) => (
@@ -28,6 +23,6 @@ export function WeekSelector({ weeks, activeIndex, onChange }: WeekSelectorProps
           ))}
         </div>
       </div>
-    </section>
+    </nav>
   );
 }

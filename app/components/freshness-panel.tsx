@@ -48,6 +48,14 @@ export function FreshnessPanel({
   onOptimise,
 }: FreshnessPanelProps) {
   const options = useMemo(() => getFreshnessProductsForWeek(week), [week]);
+  const hasBlockingIssues = evaluation.issues.some((issue) => issue.severity === "error");
+  const [panelOpen, setPanelOpen] = useState(hasBlockingIssues);
+  const [sawBlockingIssues, setSawBlockingIssues] = useState(hasBlockingIssues);
+  if (hasBlockingIssues !== sawBlockingIssues) {
+    // A new freshness problem should never hide inside a closed panel.
+    setSawBlockingIssues(hasBlockingIssues);
+    if (hasBlockingIssues) setPanelOpen(true);
+  }
   const [formOpen, setFormOpen] = useState(false);
   const [productId, setProductId] = useState<MorrisonsProductId | "">(options[0]?.productId ?? "");
   const [quantity, setQuantity] = useState(options[0] ? String(options[0].defaultQuantity) : "");
@@ -109,12 +117,19 @@ export function FreshnessPanel({
 
   const blockingIssues = evaluation.issues.filter((issue) => issue.severity === "error");
   const missingLotCount = evaluation.issues.filter((issue) => issue.code === "missing-lot").length;
+  const expectedPacks = options.reduce((total, option) => total + Math.max(1, Math.round(option.defaultQuantity / option.packQuantity)), 0);
+
+  if (!options.length) return null;
 
   return (
-    <section className="freshness-panel" aria-labelledby={`freshness-title-w${week.number}`}>
+    <details className="freshness-panel" open={panelOpen} onToggle={(event) => setPanelOpen(event.currentTarget.open)}>
+      <summary className="freshness-summary">
+        <span id={`freshness-title-w${week.number}`}>Use-by dates</span>
+        <span className="freshness-summary-count">{lots.length} of {expectedPacks} {expectedPacks === 1 ? "pack" : "packs"} recorded</span>
+        {blockingIssues.length ? <span className="freshness-summary-alert">Needs attention</span> : null}
+      </summary>
       <div className="freshness-heading">
         <div>
-          <h3 id={`freshness-title-w${week.number}`}>Use-by dates for this shop</h3>
           <p>Record each fresh or chilled meat pack separately. The optimiser allocates measured recipe quantities from the earliest-expiring pack first.</p>
         </div>
         <button type="button" className="button button-secondary freshness-add" onClick={() => { setFormOpen((open) => !open); setFormError(""); }} disabled={!options.length}>
@@ -167,10 +182,12 @@ export function FreshnessPanel({
       ) : null}
       {missingLotCount ? <p className="freshness-missing" role="status">{missingLotCount} recipe {missingLotCount === 1 ? "use still needs" : "uses still need"} a dated pack. The current optimisation covers the recorded packs only.</p> : null}
 
-      <div className="freshness-actions">
-        <button type="button" className="button button-primary" onClick={onOptimise} disabled={!lots.length}>Optimise this week</button>
-        <span>{lots.length ? (evaluation.feasible ? "All recorded pack quantities fit the current order." : "The optimiser will keep cooked dinners fixed and look for a safe order.") : "Add pack dates first."}</span>
-      </div>
-    </section>
+      {lots.length ? (
+        <div className="freshness-actions">
+          <button type="button" className="button button-primary" onClick={onOptimise}>Optimise this week</button>
+          <span>{evaluation.feasible ? "All recorded pack quantities fit the current order." : "The optimiser will keep cooked dinners fixed and look for a safe order."}</span>
+        </div>
+      ) : null}
+    </details>
   );
 }

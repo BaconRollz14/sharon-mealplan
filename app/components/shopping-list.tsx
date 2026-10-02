@@ -6,6 +6,7 @@ import {
   ListChecks,
   MoreHorizontal,
   Plus,
+  Share2,
   Trash2,
   Undo2,
   X,
@@ -59,6 +60,7 @@ interface ShoppingListProps {
   onUpdateFreshnessLot?: (lot: PurchasedLot) => void;
   onRemoveFreshnessLot?: (lotId: string) => void;
   onOptimiseFreshness?: () => void;
+  onShare?: () => void;
 }
 
 type DisplayItem = {
@@ -91,6 +93,7 @@ export function ShoppingList({
   onUpdateFreshnessLot = () => {},
   onRemoveFreshnessLot = () => {},
   onOptimiseFreshness = () => {},
+  onShare,
 }: ShoppingListProps) {
   const [basketOpen, setBasketOpen] = useState(false);
   const [extraFormOpen, setExtraFormOpen] = useState(false);
@@ -194,16 +197,10 @@ export function ShoppingList({
 
   return (
     <div className="shopping-view">
-      <div className="shopping-heading">
-        <div>
-          <h3>Week {week.number} shopping list</h3>
-        </div>
-        <div className="shopping-progress" aria-live="polite">
-          <span>{pickedCount} of {allItems.length} picked</span>
-        </div>
-      </div>
+      <h3 className="sr-only">Week {week.number} shopping list</h3>
 
       <div className="shopping-tools" aria-label="Shopping list tools">
+        <p className="shopping-progress" aria-live="polite">{pickedCount} of {allItems.length} picked</p>
         <label className="compact-switch" htmlFor="remaining-items-switch">
           <Switch id="remaining-items-switch" checked={showRemaining} onCheckedChange={onShowRemainingChange} />
           <span>Show remaining only</span>
@@ -218,20 +215,10 @@ export function ShoppingList({
             </DropdownMenuItem>
             <DropdownMenuItem onSelect={onClearChecked} disabled={!pickedCount}><Trash2 aria-hidden="true" />Clear checked</DropdownMenuItem>
             {canUndo ? <DropdownMenuItem onSelect={onUndo}><Undo2 aria-hidden="true" />Undo</DropdownMenuItem> : null}
+            {onShare ? <DropdownMenuItem onSelect={onShare}><Share2 aria-hidden="true" />Share progress</DropdownMenuItem> : null}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-
-      <FreshnessPanel
-        week={week}
-        weekStartISO={weekStartISO}
-        lots={freshnessLots}
-        evaluation={freshnessEvaluation}
-        onAddLot={onAddFreshnessLot}
-        onUpdateLot={onUpdateFreshnessLot}
-        onRemoveLot={onRemoveFreshnessLot}
-        onOptimise={onOptimiseFreshness}
-      />
 
       {extraFormOpen ? (
         <form className="extra-shopping-form" onSubmit={submitExtra}>
@@ -310,7 +297,7 @@ export function ShoppingList({
 
         <section className={`basket-summary${basketOpen ? " is-open" : ""}`} aria-label="Basket summary">
           <button type="button" className="basket-summary-toggle" aria-expanded={basketOpen} aria-controls={`basket-summary-details-w${week.number}`} onClick={() => setBasketOpen((open) => !open)}>
-            <span>Basket summary</span>
+            <span>{pickedCount} of {allItems.length} picked</span>
             <strong>{money.format(estimatedCheckoutTotal)}</strong>
           </button>
           <div className="basket-summary-details" id={`basket-summary-details-w${week.number}`}>
@@ -327,6 +314,17 @@ export function ShoppingList({
           </div>
         </section>
       </div>
+
+      <FreshnessPanel
+        week={week}
+        weekStartISO={weekStartISO}
+        lots={freshnessLots}
+        evaluation={freshnessEvaluation}
+        onAddLot={onAddFreshnessLot}
+        onUpdateLot={onUpdateFreshnessLot}
+        onRemoveLot={onRemoveFreshnessLot}
+        onOptimise={onOptimiseFreshness}
+      />
     </div>
   );
 }

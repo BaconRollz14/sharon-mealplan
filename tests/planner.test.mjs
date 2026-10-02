@@ -389,9 +389,7 @@ test("persists manual shopping categories alongside the existing planner state",
   const shoppingMenu = finalRuleDeclarations(css, ".shopping-category-menu");
   assert.equal(shoppingMenu?.background, "var(--surface-strong)");
   assert.equal(shoppingMenu?.opacity, "1");
-  const ratingSummary = finalRuleDeclarations(css, ".meal-rating-summary");
-  assert.equal(ratingSummary?.position, "static");
-  assert.equal(ratingSummary?.["border-top"], "1px solid var(--line)");
+  assert.doesNotMatch(css, /\.meal-rating-summary/, "unrated meals no longer show an empty star strip");
   assert.equal(finalRuleDeclarations(css, '.shopping-category-menu [data-slot="dropdown-menu-radio-item"]')?.["min-height"], "44px");
   assert.equal(finalRuleDeclarations(css, ".extra-owned-check")?.["min-height"], "44px");
   assert.equal(finalRuleDeclarations(css, ".share-fallback-url")?.["min-height"], "44px");
@@ -443,8 +441,8 @@ test("persists a validated one-to-five star rating for each meal", async () => {
   assert.match(plannerSource, /mealRatings: \{ \.\.\.mealRatings \}/);
   assert.match(ratingSource, /\[1, 2, 3, 4, 5\]/);
   assert.match(ratingSource, /role="radio"/);
-  assert.match(ratingSource, /readOnly/);
-  assert.match(plannerSource, /readOnly\s*\n\s*\/>/);
+  assert.match(plannerSource, /rating \? <span className="meal-rating-inline">/);
+  assert.match(plannerSource, /Rated \{rating\} out of 5/);
 });
 
 test("keeps portion basis and cooking instructions aligned", async () => {
@@ -737,7 +735,8 @@ test("keeps recipe search and ordinary sharing messaging accessible", async () =
 
   assert.doesNotMatch(plannerSource, /<label className="search-field"/);
   assert.match(plannerSource, /placeholder="Search all four weeks by dish or ingredient"/);
-  assert.match(plannerSource, /Searches all four weeks by meal, ingredient or day\./);
+  assert.doesNotMatch(plannerSource, /recipe-search-help/, "the placeholder already explains search");
+  assert.match(plannerSource, /query \? "Search results" : "This week's dinners"/);
   assert.match(shareBlock, /setShareError\(""\);\s*setShareFallbackUrl\(""\);/);
   assert.match(shareBlock, /await navigator\.clipboard\.writeText[\s\S]*?setShareError\(""\);/);
   assert.match(shareBlock, /shareUrl\.searchParams\.delete\("family"\)/);

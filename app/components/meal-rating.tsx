@@ -6,28 +6,10 @@ interface MealRatingProps {
   mealName: string;
   rating: number;
   onRate?: (rating: number) => void;
-  readOnly?: boolean;
   className?: string;
 }
 
-export function MealRating({ mealName, rating, onRate = () => {}, readOnly = false, className = "" }: MealRatingProps) {
-  if (readOnly) {
-    return (
-      <div
-        role="img"
-        className={`meal-rating meal-rating-summary ${className}`.trim()}
-        aria-label={rating ? `${mealName} rated ${rating} out of 5` : `${mealName} has not been rated`}
-      >
-        <span className="meal-rating-label">{rating ? `Rated ${rating}/5` : "Not rated"}</span>
-        <span className="meal-rating-stars" aria-hidden="true">
-          {[1, 2, 3, 4, 5].map((value) => (
-            <Star key={value} aria-hidden="true" className={value <= rating ? "is-filled" : undefined} fill={value <= rating ? "currentColor" : "none"} />
-          ))}
-        </span>
-      </div>
-    );
-  }
-
+export function MealRating({ mealName, rating, onRate = () => {}, className = "" }: MealRatingProps) {
   const moveRating = (event: React.KeyboardEvent<HTMLButtonElement>, value: number) => {
     const direction = event.key === "ArrowRight" || event.key === "ArrowUp" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowDown" ? -1 : 0;
     const next = event.key === "Home" ? 1 : event.key === "End" ? 5 : direction ? ((value - 1 + direction + 5) % 5) + 1 : null;
