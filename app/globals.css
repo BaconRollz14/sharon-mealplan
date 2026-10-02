@@ -1,0 +1,167 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./planner.css";
+@import "./print.css";
+
+:root {
+  --paper: #f1eadf;
+  --surface: #fbf8f1;
+  --surface-strong: #fffdf8;
+  --surface-soft: #e8ded0;
+  --surface-tint: var(--tomato-soft);
+  --ink: #2d2025;
+  --ink-soft: #514349;
+  --ink-muted: #706168;
+  --tomato: #5b6263;
+  --tomato-dark: #3f4648;
+  --tomato-soft: #e3e7e7;
+  --sage: #4f5e43;
+  --sage-soft: #e4e8dc;
+  --yellow: #e9b853;
+  --yellow-soft: #f7ebcb;
+  --line: #d4c6b8;
+  --line-strong: #a99687;
+  --rating-muted: #66545a;
+  --rating-filled: #7a4f00;
+  --deep-navy: #302027;
+  --hero-base: #34222a;
+  --hero-accent: #f0bd56;
+  --hero-text: #fffdf7;
+  --hero-panel: rgb(16 28 39 / 92%);
+  --active-fill: #2d2025;
+  --active-border: #2d2025;
+  --active-text: #fffdf7;
+  --active-thumb: #e4ddd4;
+  --hero-overlay: linear-gradient(90deg, rgb(52 34 42 / 98%) 0%, rgb(52 34 42 / 92%) 39%, rgb(52 34 42 / 58%) 66%, rgb(52 34 42 / 20%) 90%);
+  --hero-overlay-mobile: linear-gradient(90deg, rgb(52 34 42 / 98%) 0%, rgb(52 34 42 / 88%) 78%, rgb(52 34 42 / 64%) 100%), linear-gradient(0deg, rgb(52 34 42 / 58%), transparent 76%);
+  --shadow: 0 18px 50px rgb(27 42 55 / 10%);
+  --shadow-soft: 0 8px 24px rgb(27 42 55 / 8%);
+  --radius-lg: 26px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--surface);
+  --card-foreground: var(--ink);
+  --popover: var(--surface);
+  --popover-foreground: var(--ink);
+  --primary: var(--tomato);
+  --primary-foreground: #fff;
+  --secondary: var(--surface-soft);
+  --secondary-foreground: var(--ink);
+  --muted: var(--surface-soft);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--tomato-soft);
+  --accent-foreground: var(--tomato-dark);
+  --destructive: #b42318;
+  --border: var(--line);
+  --input: var(--line);
+  --ring: var(--tomato);
+  --focus-ring: #596266;
+  --selection-ink: var(--ink);
+  --radius: 0.75rem;
+}
+:root[data-theme="dark"] {
+  /* Black, graphite, ink navy and steel keep dark mode restrained and premium. */
+  --paper: #0b0d10;
+  --surface: #141a22;
+  --surface-strong: #1c2530;
+  --surface-soft: #26313e;
+  --surface-tint: #27384d;
+  --ink: #f2f0eb;
+  --ink-soft: #d5dbe1;
+  --ink-muted: #a9b4c0;
+  --tomato: #9ebbd7;
+  --tomato-dark: #c7d9e8;
+  --tomato-soft: #26384c;
+  --sage: #b9c9d8;
+  --sage-soft: #26313d;
+  --yellow: #c4d6e5;
+  --yellow-soft: #2b3948;
+  --line: #3b4857;
+  --line-strong: #607488;
+  --rating-muted: #6c7d8f;
+  --rating-filled: #b8d0e5;
+  --deep-navy: #070b10;
+  --hero-base: #111a25;
+  --hero-accent: #b8d0e5;
+  --hero-text: #f5f2ec;
+  --hero-panel: rgb(4 8 13 / 94%);
+  --active-fill: #294764;
+  --active-border: #83add3;
+  --active-text: #f3f1ec;
+  --active-thumb: #d7e4ee;
+  --hero-overlay: linear-gradient(90deg, rgb(17 26 37 / 99%) 0%, rgb(17 26 37 / 94%) 42%, rgb(17 26 37 / 66%) 68%, rgb(17 26 37 / 24%) 91%);
+  --hero-overlay-mobile: linear-gradient(90deg, rgb(17 26 37 / 99%) 0%, rgb(17 26 37 / 91%) 78%, rgb(17 26 37 / 70%) 100%), linear-gradient(0deg, rgb(17 26 37 / 64%), transparent 76%);
+  --shadow: 0 22px 55px rgb(0 0 0 / 60%);
+  --shadow-soft: 0 10px 26px rgb(0 0 0 / 38%);
+  --destructive: #ffb4ab;
+  --primary-foreground: #10171f;
+  --focus-ring: #b8d0e5;
+  --selection-ink: #10171f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--paper);
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  transition: background-color 220ms ease, color 220ms ease;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+a {
+  color: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--tomato) 58%, transparent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
