@@ -490,55 +490,49 @@ test("keeps the recipe reader responsive alongside dark mode and print rules", a
     surface: darkTheme?.["--surface"],
     surfaceStrong: darkTheme?.["--surface-strong"],
     surfaceSoft: darkTheme?.["--surface-soft"],
-    surfaceTint: darkTheme?.["--surface-tint"],
+    ink: darkTheme?.["--ink"],
     inkMuted: darkTheme?.["--ink-muted"],
-    tomato: darkTheme?.["--tomato"],
-    tomatoDark: darkTheme?.["--tomato-dark"],
-    tomatoSoft: darkTheme?.["--tomato-soft"],
-    sage: darkTheme?.["--sage"],
-    sageSoft: darkTheme?.["--sage-soft"],
-    yellow: darkTheme?.["--yellow"],
-    yellowSoft: darkTheme?.["--yellow-soft"],
+    action: darkTheme?.["--action"],
+    actionStrong: darkTheme?.["--action-strong"],
+    actionSoft: darkTheme?.["--action-soft"],
+    positive: darkTheme?.["--positive"],
+    highlight: darkTheme?.["--highlight"],
     line: darkTheme?.["--line"],
     lineStrong: darkTheme?.["--line-strong"],
-    ratingMuted: darkTheme?.["--rating-muted"],
-    ratingFilled: darkTheme?.["--rating-filled"],
-    heroBase: darkTheme?.["--hero-base"],
-    heroAccent: darkTheme?.["--hero-accent"],
+    inverseSurface: darkTheme?.["--inverse-surface"],
     activeFill: darkTheme?.["--active-fill"],
     activeBorder: darkTheme?.["--active-border"],
+    brandMarkBg: darkTheme?.["--brand-mark-bg"],
+    brandMarkInk: darkTheme?.["--brand-mark-ink"],
     primaryForeground: darkTheme?.["--primary-foreground"],
     focusRing: darkTheme?.["--focus-ring"],
-    selectionInk: darkTheme?.["--selection-ink"],
   }, {
-    paper: "#0b0d10",
-    surface: "#141a22",
-    surfaceStrong: "#1c2530",
-    surfaceSoft: "#26313e",
-    surfaceTint: "#27384d",
-    inkMuted: "#a9b4c0",
-    tomato: "#9ebbd7",
-    tomatoDark: "#c7d9e8",
-    tomatoSoft: "#26384c",
-    sage: "#b9c9d8",
-    sageSoft: "#26313d",
-    yellow: "#c4d6e5",
-    yellowSoft: "#2b3948",
-    line: "#3b4857",
-    lineStrong: "#607488",
-    ratingMuted: "#6c7d8f",
-    ratingFilled: "#b8d0e5",
-    heroBase: "#111a25",
-    heroAccent: "#b8d0e5",
-    activeFill: "#294764",
-    activeBorder: "#83add3",
-    primaryForeground: "#10171f",
-    focusRing: "#b8d0e5",
-    selectionInk: "#10171f",
+    paper: "#171311",
+    surface: "#241d1a",
+    surfaceStrong: "#302621",
+    surfaceSoft: "#3a2f28",
+    ink: "#f4ece1",
+    inkMuted: "#bcae9f",
+    action: "#d2a568",
+    actionStrong: "#f0ce98",
+    actionSoft: "#493724",
+    positive: "#b9c79f",
+    highlight: "#e9b853",
+    line: "#57483f",
+    lineStrong: "#7a6759",
+    inverseSurface: "#34222a",
+    activeFill: "#4a3a2a",
+    activeBorder: "#d2a568",
+    brandMarkBg: "#d2a568",
+    brandMarkInk: "#1f1714",
+    primaryForeground: "#1f1714",
+    focusRing: "#f0ce98",
   });
+  assert.doesNotMatch(globalCss + css, /--(?:tomato|sage|yellow|deep-navy|hero-base)\b/, "tokens are named by role, not by an old colour");
+  assert.equal(finalRuleDeclarations(globalCss, ":root")?.["--action"], "#6b3352", "light-mode primary is aubergine");
   assert.equal(finalRuleDeclarations(css, "::selection")?.color, "var(--selection-ink)");
-  assert.match(layoutSource, /media="\(prefers-color-scheme: dark\)" content="#0b0d10"/);
-  assert.match(manifest, /"theme_color": "#0b0d10"/);
+  assert.match(layoutSource, /media="\(prefers-color-scheme: dark\)" content="#171311"/);
+  assert.match(manifest, /"theme_color": "#f1eadf"/);
   const printRoot = postcss.parse(printCss);
   assert.equal(printRoot.nodes.some((node) => node.type === "atrule" && node.name === "media" && node.params === "print"), true);
   assert.doesNotMatch(css + globalCss, /\.guide-(intro|layout|card)/);
@@ -569,7 +563,7 @@ test("uses a fully contained 44px-high theme control with one visual positioning
   assert.equal(finalRuleDeclarations(css, ".theme-control")?.["grid-template-columns"], "auto 84px");
 });
 
-test("uses restrained steel keylines for planner structure and active controls", async () => {
+test("uses restrained keylines for planner structure and active controls", async () => {
   const css = await readFile(path.join(root, "app/planner.css"), "utf8");
 
   assert.equal(finalRuleDeclarations(css, ".week-tabs-list")?.border, "1px solid var(--line-strong)");

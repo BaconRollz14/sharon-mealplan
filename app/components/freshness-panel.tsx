@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useMemo, useRef, useState } from "react";
-import { PackagePlus, Trash2 } from "lucide-react";
+import { PackagePlus, ShieldAlert, Trash2 } from "lucide-react";
 import type { WeekPlan } from "../cookbook-data";
 import {
   getFreshnessProductsForWeek,
@@ -176,6 +176,7 @@ export function FreshnessPanel({
 
       {blockingIssues.length ? (
         <div className="freshness-issues" role="alert" aria-live="polite">
+          <ShieldAlert aria-hidden="true" />
           <strong>{blockingIssues.length === 1 ? "One freshness check needs attention." : `${blockingIssues.length} freshness checks need attention.`}</strong>
           <ul>{blockingIssues.map((issue, index) => <li key={`${issue.recipeId ?? "issue"}-${issue.productId ?? "product"}-${index}`}>{issue.message}</li>)}</ul>
         </div>

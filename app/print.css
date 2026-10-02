@@ -10,9 +10,9 @@
     --ink-soft: #222;
     --ink-muted: #555;
     --line: #bbb;
-    --tomato: #8b231f;
-    --tomato-dark: #671713;
-    --sage: #365c4d;
+    --action: #8b231f;
+    --action-strong: #671713;
+    --positive: #365c4d;
     --shadow: none;
     --shadow-soft: none;
   }

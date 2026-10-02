@@ -9,7 +9,7 @@
   padding: 11px 17px;
   border-radius: 999px;
   transform: translate(-50%, -180%);
-  background: var(--tomato);
+  background: var(--action);
   color: var(--primary-foreground);
   font-size: 0.875rem;
   font-weight: 800;
@@ -210,7 +210,7 @@
 }
 
 .button-primary {
-  background: var(--tomato);
+  background: var(--action);
   color: var(--primary-foreground);
 }
 
@@ -265,7 +265,7 @@
 
 .view-tab[data-state="active"] {
   background: var(--surface);
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   border-color: var(--active-border);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--active-border) 72%, transparent), 0 2px 7px color-mix(in srgb, var(--ink) 12%, transparent);
 }
@@ -275,8 +275,8 @@
 }
 
 .icon-text-button:hover:not(:disabled) {
-  border-color: var(--tomato);
-  color: var(--tomato-dark);
+  border-color: var(--action);
+  color: var(--action-strong);
 }
 
 .weekly-cost span {
@@ -286,7 +286,7 @@
 }
 
 .weekly-cost strong {
-  color: var(--tomato);
+  color: var(--action);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1.55rem;
   letter-spacing: -0.05em;
@@ -308,8 +308,8 @@
 }
 
 .search-field:focus-within {
-  border-color: var(--tomato);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--tomato) 14%, transparent);
+  border-color: var(--action);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--action) 14%, transparent);
 }
 
 .search-field > svg {
@@ -347,8 +347,8 @@
 }
 
 .search-field > button:hover {
-  background: var(--tomato-soft);
-  color: var(--tomato-dark);
+  background: var(--action-soft);
+  color: var(--action-strong);
 }
 
 .search-field > button svg {
@@ -367,7 +367,7 @@
 
 .meal-day,
 .recipe-day-label {
-  color: var(--tomato);
+  color: var(--action);
   font-size: 0.73rem;
   font-weight: 850;
   letter-spacing: 0.09em;
@@ -384,7 +384,7 @@
 
 .meal-state-icons {
   flex: 0 0 auto;
-  color: var(--tomato);
+  color: var(--action);
 }
 
 .meal-state-icons svg {
@@ -398,7 +398,7 @@
   height: 18px;
   place-items: center;
   border-radius: 50%;
-  background: var(--sage);
+  background: var(--positive);
   color: var(--surface);
   font-size: 0.72rem;
   font-weight: 900;
@@ -412,7 +412,7 @@
 .meal-meta strong {
   display: grid;
   justify-items: end;
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1rem;
 }
@@ -451,8 +451,8 @@
   position: relative;
   padding: 23px 24px 20px;
   background:
-    radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--yellow) 40%, transparent), transparent 10rem),
-    linear-gradient(135deg, var(--tomato-soft), var(--surface-tint) 58%);
+    radial-gradient(circle at 95% 0%, color-mix(in srgb, var(--highlight) 40%, transparent), transparent 10rem),
+    linear-gradient(135deg, var(--action-soft), var(--surface-tint) 58%);
 }
 
 .recipe-detail-header h3 {
@@ -482,10 +482,10 @@
   display: grid;
   justify-items: end;
   padding: 6px 9px;
-  border: 1px solid color-mix(in srgb, var(--tomato) 25%, transparent);
+  border: 1px solid color-mix(in srgb, var(--action) 25%, transparent);
   border-radius: 12px;
   background: color-mix(in srgb, var(--surface) 80%, transparent);
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 0.95rem;
   font-weight: 700;
@@ -515,9 +515,9 @@
 }
 
 .recipe-actions button.is-active {
-  border-color: var(--tomato);
-  background: var(--tomato-soft);
-  color: var(--tomato-dark);
+  border-color: var(--action);
+  background: var(--action-soft);
+  color: var(--action-strong);
 }
 
 .recipe-stats {
@@ -551,7 +551,7 @@
 .recipe-stats dt svg {
   width: 13px;
   height: 13px;
-  color: var(--sage);
+  color: var(--positive);
 }
 
 .recipe-stats dd {
@@ -605,7 +605,7 @@
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: var(--tomato);
+  background: var(--action);
   content: "";
 }
 
@@ -634,8 +634,8 @@
   height: 23px;
   place-items: center;
   border-radius: 50%;
-  background: var(--tomato-soft);
-  color: var(--tomato-dark);
+  background: var(--action-soft);
+  color: var(--action-strong);
   content: counter(steps);
   counter-increment: steps;
   font-size: 0.72rem;
@@ -664,10 +664,10 @@
   min-height: 24px;
   align-items: center;
   padding: 3px 8px;
-  border: 1px solid color-mix(in srgb, var(--tomato) 32%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--action) 32%, var(--line));
   border-radius: 999px;
   background: var(--surface-tint);
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-size: 0.67rem;
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -680,7 +680,7 @@
   align-items: flex-start;
   margin: 0 0 10px;
   padding: 10px 11px;
-  border: 1px solid color-mix(in srgb, var(--tomato) 24%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--action) 24%, var(--line));
   border-radius: 10px;
   background: var(--surface-tint);
   color: var(--ink-soft);
@@ -691,7 +691,7 @@
   height: 15px;
   flex: 0 0 auto;
   margin-top: 2px;
-  color: var(--tomato-dark);
+  color: var(--action-strong);
 }
 
 .portion-rule p {
@@ -712,7 +712,7 @@
 }
 
 .portion-grid strong {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-size: 0.76rem;
 }
 
@@ -731,7 +731,7 @@
 
 .cost-breakdown {
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--yellow) 55%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--highlight) 55%, var(--line));
   border-radius: 13px;
   background: var(--surface-soft);
 }
@@ -763,11 +763,11 @@
 .cost-breakdown > summary svg {
   width: 17px;
   height: 17px;
-  color: color-mix(in srgb, var(--yellow) 68%, var(--ink));
+  color: color-mix(in srgb, var(--highlight) 68%, var(--ink));
 }
 
 .cost-breakdown > summary strong {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-family: Georgia, "Times New Roman", serif;
   font-size: 1rem;
 }
@@ -843,7 +843,7 @@
 
 .cost-breakdown tbody td:last-child,
 .cost-breakdown tfoot td {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-weight: 800;
 }
 
@@ -864,8 +864,8 @@
 .cost-estimate-note {
   padding: 9px 10px;
   border-radius: 9px;
-  background: var(--yellow-soft);
-  color: color-mix(in srgb, var(--yellow) 46%, var(--ink));
+  background: var(--highlight-soft);
+  color: color-mix(in srgb, var(--highlight) 46%, var(--ink));
 }
 
 .cook-note {
@@ -873,8 +873,8 @@
   gap: 11px;
   border-radius: 13px;
   padding: 14px;
-  background: var(--sage-soft);
-  color: var(--sage);
+  background: var(--positive-soft);
+  color: var(--positive);
 }
 
 .cook-note > svg {
@@ -898,7 +898,7 @@
 
 .empty-search {
   min-height: 290px;
-  border: 1px dashed color-mix(in srgb, var(--tomato) 38%, var(--line));
+  border: 1px dashed color-mix(in srgb, var(--action) 38%, var(--line));
   background: var(--surface-strong);
 }
 
@@ -960,7 +960,7 @@
 
 .meal-rating-stars button:hover,
 .meal-rating-stars button:focus-visible {
-  background: color-mix(in srgb, var(--yellow) 24%, transparent);
+  background: color-mix(in srgb, var(--highlight) 24%, transparent);
   outline: 3px solid var(--focus-ring);
   outline-offset: -3px;
 }
@@ -983,7 +983,7 @@
 .shopping-item-move:focus-visible,
 .shopping-item-move[data-state="open"] {
   background: var(--surface-soft);
-  color: var(--tomato-dark);
+  color: var(--action-strong);
 }
 
 .shopping-item-move:focus-visible {
@@ -1024,7 +1024,7 @@
 }
 
 .shopping-item:hover .shopping-item-name strong {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
 }
 
 .shopping-item.is-checked {
@@ -1038,7 +1038,7 @@
 }
 
 .shopping-item-price.is-carried {
-  color: var(--sage);
+  color: var(--positive);
   font-family: ui-sans-serif, system-ui, sans-serif;
   font-size: 0.72rem;
   font-weight: 850;
@@ -1053,10 +1053,10 @@
   justify-content: center;
   gap: 13px;
   padding: 24px;
-  border: 1px dashed var(--sage);
+  border: 1px dashed var(--positive);
   border-radius: 15px;
-  background: var(--sage-soft);
-  color: var(--sage);
+  background: var(--positive-soft);
+  color: var(--positive);
 }
 
 .shopping-complete > svg {
@@ -1104,8 +1104,8 @@
   height: 38px;
   place-items: center;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--hero-accent) 18%, transparent);
-  color: var(--hero-accent);
+  background: color-mix(in srgb, var(--inverse-accent) 18%, transparent);
+  color: var(--inverse-accent);
 }
 
 .summary-icon svg {
@@ -1123,7 +1123,7 @@
 
 .basket-summary-details > p {
   margin: 1px 0 3px;
-  color: color-mix(in srgb, var(--hero-text) 70%, transparent);
+  color: color-mix(in srgb, var(--inverse-ink) 70%, transparent);
   font-size: 0.8rem;
   line-height: 1.5;
 }
@@ -1131,14 +1131,14 @@
 .summary-rule {
   height: 1px;
   margin: 7px 0 2px;
-  background: color-mix(in srgb, var(--hero-text) 15%, transparent);
+  background: color-mix(in srgb, var(--inverse-ink) 15%, transparent);
 }
 
 .basket-summary-details > span {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: color-mix(in srgb, var(--hero-text) 84%, transparent);
+  color: color-mix(in srgb, var(--inverse-ink) 84%, transparent);
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -1147,14 +1147,14 @@
   width: 15px;
   height: 15px;
   flex: 0 0 auto;
-  color: var(--hero-accent);
+  color: var(--inverse-accent);
 }
 
 .basket-summary-details > small {
   margin-top: 7px;
   padding-top: 12px;
-  border-top: 1px solid color-mix(in srgb, var(--hero-text) 15%, transparent);
-  color: color-mix(in srgb, var(--hero-text) 60%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--inverse-ink) 15%, transparent);
+  color: color-mix(in srgb, var(--inverse-ink) 60%, transparent);
   font-size: 0.72rem;
   line-height: 1.45;
 }
@@ -1435,9 +1435,9 @@
   min-height: 22px;
   align-items: center;
   padding: 2px 6px;
-  border: 1px solid var(--tomato);
+  border: 1px solid var(--action);
   border-radius: 999px;
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-size: 0.6rem;
   font-weight: 850;
   letter-spacing: 0.04em;
@@ -1472,8 +1472,8 @@
 }
 
 .compact-switch [data-slot="switch"][data-state="checked"] {
-  border-color: var(--tomato-dark);
-  background: var(--tomato);
+  border-color: var(--action-strong);
+  background: var(--action);
 }
 
 .compact-switch [data-slot="switch-thumb"] {
@@ -1503,8 +1503,8 @@
   margin-left: 6px;
   padding: 2px 5px;
   border-radius: 999px;
-  background: var(--yellow-soft);
-  color: var(--tomato-dark);
+  background: var(--highlight-soft);
+  color: var(--action-strong);
   font-size: 0.62rem;
   font-weight: 850;
   letter-spacing: 0.04em;
@@ -1521,7 +1521,7 @@
   padding: 12px 16px;
   border: 0;
   background: transparent;
-  color: var(--hero-text);
+  color: var(--inverse-ink);
   text-align: left;
   cursor: pointer;
 }
@@ -1615,7 +1615,7 @@
 
 .clear-rating:hover,
 .clear-rating:focus-visible {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   outline: 3px solid var(--focus-ring);
   outline-offset: 1px;
 }
@@ -1644,7 +1644,7 @@
   width: 20px;
   height: 20px;
   margin-top: 2px;
-  accent-color: var(--tomato);
+  accent-color: var(--action);
   flex: 0 0 auto;
 }
 
@@ -1760,7 +1760,7 @@
 }
 
 .week-tab:hover {
-  border-color: color-mix(in srgb, var(--tomato) 45%, var(--line));
+  border-color: color-mix(in srgb, var(--action) 45%, var(--line));
   transform: none;
 }
 
@@ -1795,7 +1795,7 @@
   justify-items: end;
   padding-left: 11px;
   border-left: 1px solid var(--line);
-  border-left-color: var(--tomato);
+  border-left-color: var(--action);
 }
 
 .recipe-filter-bar {
@@ -1804,9 +1804,9 @@
 }
 
 .meal-card:hover {
-  border-color: color-mix(in srgb, var(--tomato) 45%, var(--line));
+  border-color: color-mix(in srgb, var(--action) 45%, var(--line));
   border: 0;
-  background: var(--yellow-soft);
+  background: var(--highlight-soft);
   transform: none;
 }
 
@@ -1836,12 +1836,12 @@
 }
 
 ::selection {
-  background: var(--yellow);
+  background: var(--highlight);
   color: var(--selection-ink);
 }
 
 * {
-  scrollbar-color: var(--tomato) var(--surface-soft);
+  scrollbar-color: var(--action) var(--surface-soft);
   scrollbar-width: thin;
 }
 
@@ -2022,7 +2022,7 @@
 
 .shopping-item-price {
   white-space: nowrap;
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-family: Georgia, "Times New Roman", serif;
   font-weight: 700;
   align-self: end;
@@ -2057,7 +2057,7 @@
 }
 
 .shopping-category-menu .is-danger {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
 }
 
 .clear-rating {
@@ -2074,7 +2074,7 @@
 
 .summary-warning,
 .form-error {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
   font-weight: 750;
 }
 
@@ -2245,7 +2245,7 @@
   width: fit-content;
   margin-top: 14px;
   padding: 5px 8px 5px 12px;
-  border: 1px solid color-mix(in srgb, var(--tomato) 30%, var(--line));
+  border: 1px solid color-mix(in srgb, var(--action) 30%, var(--line));
   border-radius: 10px;
   background: color-mix(in srgb, var(--surface) 78%, transparent);
 }
@@ -2451,16 +2451,16 @@
   gap: 13px;
   margin: 0 0 12px;
   padding: 14px 16px;
-  border: 1px solid var(--yellow);
+  border: 2px solid var(--highlight-strong);
   border-radius: 12px;
-  background: var(--yellow-soft);
+  background: var(--highlight-soft);
   color: var(--ink);
 }
 
 .freshness-warning > svg {
   width: 23px;
   height: 23px;
-  color: var(--yellow);
+  color: var(--highlight-strong);
 }
 
 .freshness-warning p {
@@ -2547,7 +2547,7 @@
 .freshness-form input:focus-visible,
 .freshness-form select:focus-visible,
 .freshness-lot input:focus-visible {
-  border-color: var(--tomato);
+  border-color: var(--action);
   outline: 3px solid var(--focus-ring);
   outline-offset: 1px;
 }
@@ -2631,8 +2631,9 @@
 
 .freshness-issues {
   padding: 11px 12px;
-  border-left: 3px solid var(--yellow);
-  background: var(--yellow-soft);
+  border: 2px solid var(--highlight-strong);
+  border-radius: 10px;
+  background: var(--highlight-soft);
   color: var(--ink);
   font-size: 0.8rem;
 }
@@ -2709,7 +2710,7 @@
 }
 
 [data-slot="dropdown-menu-item"] svg {
-  color: var(--tomato);
+  color: var(--action);
 }
 
 [data-slot="dropdown-menu-item"]:not([data-disabled]):hover,
@@ -2762,14 +2763,14 @@
   margin: 0 0 22px;
   overflow: hidden;
   border-radius: 18px;
-  background: var(--hero-base);
-  color: var(--hero-text);
+  background: var(--inverse-surface);
+  color: var(--inverse-ink);
 }
 
 .tonight-image {
   position: relative;
   min-height: 240px;
-  background: color-mix(in srgb, var(--hero-text) 8%, var(--hero-base));
+  background: color-mix(in srgb, var(--inverse-ink) 8%, var(--inverse-surface));
 }
 
 .tonight-image picture,
@@ -2805,7 +2806,7 @@
 .tonight-when {
   display: block;
   margin-bottom: 6px;
-  color: var(--hero-accent);
+  color: var(--inverse-accent);
   font-size: 0.55em;
   font-style: italic;
   letter-spacing: 0;
@@ -2813,12 +2814,12 @@
 
 .tonight-meta {
   margin: 0;
-  color: color-mix(in srgb, var(--hero-text) 84%, var(--hero-base));
+  color: color-mix(in srgb, var(--inverse-ink) 84%, var(--inverse-surface));
   font-size: 0.95rem;
 }
 
 .tonight-done {
-  color: var(--hero-accent);
+  color: var(--inverse-accent);
   font-weight: 600;
 }
 
@@ -2830,14 +2831,14 @@
 }
 
 .tonight-actions .button-primary {
-  background: var(--hero-text);
-  color: var(--hero-base);
+  background: var(--inverse-ink);
+  color: var(--inverse-surface);
 }
 
 .tonight-actions .button-secondary {
-  border-color: color-mix(in srgb, var(--hero-text) 50%, var(--hero-base));
+  border-color: color-mix(in srgb, var(--inverse-ink) 50%, var(--inverse-surface));
   background: transparent;
-  color: var(--hero-text);
+  color: var(--inverse-ink);
 }
 
 /* Dinners grid: search sits alone, past days step back, ratings only when given. */
@@ -2880,7 +2881,7 @@
 /* Shopping: progress leads the tools; the total pins to the bottom on phones. */
 .shopping-progress {
   margin: 0 auto 0 0;
-  color: var(--sage);
+  color: var(--positive);
   font-size: 0.875rem;
   font-weight: 600;
 }
@@ -2890,8 +2891,8 @@
   top: 158px;
   overflow: hidden;
   border-radius: 18px;
-  background: var(--deep-navy);
-  color: var(--hero-text);
+  background: var(--inverse-surface);
+  color: var(--inverse-ink);
   box-shadow: 0 14px 30px rgb(0 0 0 / 18%);
 }
 
@@ -3086,7 +3087,7 @@
   height: 26px;
   flex: 0 0 auto;
   margin: 0;
-  accent-color: var(--tomato);
+  accent-color: var(--action);
 }
 
 .ingredients-list li.is-complete .ingredient-check span {
@@ -3127,7 +3128,7 @@
 }
 
 .recipe-detail.is-cooking .method-list li.is-next .method-step-number {
-  color: var(--tomato-dark);
+  color: var(--action-strong);
 }
 
 .cooking-finish {
@@ -3136,9 +3137,9 @@
   gap: 12px;
   margin-top: 16px;
   padding: 18px;
-  border: 2px solid var(--sage);
+  border: 2px solid var(--positive);
   border-radius: 14px;
-  background: var(--sage-soft);
+  background: var(--positive-soft);
   color: var(--ink);
 }
 
@@ -3262,4 +3263,11 @@
     padding-right: 12px;
     padding-left: 12px;
   }
+}
+
+.freshness-issues > svg {
+  width: 20px;
+  height: 20px;
+  margin: 0 6px -4px 0;
+  color: var(--highlight-strong);
 }

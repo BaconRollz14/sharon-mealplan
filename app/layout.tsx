@@ -34,7 +34,7 @@ export default function RootLayout({
     <html lang="en-GB" suppressHydrationWarning>
       <head>
         <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f1eadf" />
-        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0b0d10" />
+        <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#171311" />
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="antialiased">{children}</body>

@@ -4,8 +4,8 @@
   "description": "Sharon's four-week dinner plan, with recipes, portions and organised shopping lists.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f7f3ed",
-  "theme_color": "#0b0d10",
+  "background_color": "#f1eadf",
+  "theme_color": "#f1eadf",
   "icons": [
     {
       "src": "/favicon.svg",
