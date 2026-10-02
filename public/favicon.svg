@@ -1,5 +1,5 @@
 <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sharon Meal Plan">
-  <circle cx="32" cy="32" r="30" fill="#1A2733"/>
-  <circle cx="32" cy="32" r="27" fill="none" stroke="#D6A64B" stroke-width="2"/>
-  <text x="32" y="39" fill="#D6A64B" font-family="Georgia, serif" font-size="20" font-weight="700" text-anchor="middle">SM</text>
+  <circle cx="32" cy="32" r="30" fill="#34222A"/>
+  <circle cx="32" cy="32" r="26" fill="none" stroke="#F0BD56" stroke-width="2"/>
+  <text x="32" y="39" fill="#F0BD56" font-family="Georgia, serif" font-size="20" font-weight="600" text-anchor="middle">SM</text>
 </svg>

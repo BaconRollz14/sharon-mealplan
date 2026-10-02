@@ -1034,7 +1034,7 @@ export function PlannerClient() {
                 <TabsTrigger value="shopping" className="view-tab"><ShoppingBasket aria-hidden="true" />Shopping</TabsTrigger>
               </TabsList>
               <div className="toolbar-actions">
-                <button type="button" className="icon-text-button" onClick={printPlanner} aria-label={activeView === "shopping" ? "Print shopping list" : "Print recipe"} disabled={activeView === "recipes" && !selectedEntry}><Printer aria-hidden="true" /><span>Print</span></button>
+                <button type="button" className="icon-text-button" onClick={printPlanner} aria-label={activeView === "shopping" ? "Print shopping list" : selectedEntry ? "Print recipe" : "Print this week's menu"}><Printer aria-hidden="true" /><span>Print</span></button>
                 {activeView === "recipes" ? (
                   <>
                     <DropdownMenu>
@@ -1097,6 +1097,15 @@ export function PlannerClient() {
               </section>
             ) : (
               <>
+                <ol className="print-menu" aria-hidden="true">
+                  {activeMeals.map(({ recipe, displayDay, dateOffset }) => (
+                    <li key={recipe.id}>
+                      <strong>{displayDay} · {readableMealDate(addDaysISO(activeWeekInstanceKey, dateOffset))}</strong>
+                      <span>{recipe.name}</span>
+                      <small>{formatMinutes(totalMinutes(recipe))}</small>
+                    </li>
+                  ))}
+                </ol>
                 <div className="recipe-controls">
                   <h3 className="sr-only">{query ? "Search results" : "This week's dinners"}</h3>
                   <div className="recipe-search">

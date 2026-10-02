@@ -796,3 +796,28 @@ test("makes cooking mode usable at the hob", async () => {
   assert.match(plannerSource, /navigator\.wakeLock\.request\("screen"\)/);
   assert.match(plannerSource, /visibilitychange/);
 });
+
+test("ships home-screen icons, a printable week menu and a three-radius scale", async () => {
+  const manifest = JSON.parse(await readFile(path.join(root, "public/manifest.webmanifest"), "utf8"));
+  const layoutSource = await readFile(path.join(root, "app/layout.tsx"), "utf8");
+  const plannerSource = await readFile(path.join(root, "app/planner-client.tsx"), "utf8");
+  const printCss = await readFile(path.join(root, "app/print.css"), "utf8");
+  const css = await readFile(path.join(root, "app/planner.css"), "utf8");
+
+  const sizes = manifest.icons.map((icon) => `${icon.sizes}:${icon.purpose}`);
+  assert.ok(sizes.includes("192x192:any") && sizes.includes("512x512:any") && sizes.includes("512x512:maskable"));
+  for (const icon of manifest.icons) await readFile(path.join(root, "public", icon.src.slice(1)));
+  await readFile(path.join(root, "public/apple-touch-icon.png"));
+  assert.match(layoutSource, /apple: \[\{ url: "\/apple-touch-icon\.png"/);
+
+  assert.match(plannerSource, /<ol className="print-menu" aria-hidden="true">/);
+  assert.match(plannerSource, /"Print this week's menu"/);
+  assert.doesNotMatch(plannerSource, /disabled=\{activeView === "recipes" && !selectedEntry\}/);
+  assert.match(printCss, /\.tonight-card,[\s\S]*\.freshness-panel,[\s\S]*display: none !important/);
+  assert.match(printCss, /column-count: 2/);
+
+  const radii = new Set([...css.matchAll(/border-radius: ([^;]+);/g)].map((match) => match[1]));
+  for (const value of radii) assert.match(value, /^(0|50%|999px|(var\(--radius-(control|card|panel)\)|0)( (var\(--radius-(control|card|panel)\)|0))*)$/, `off-scale radius ${value}`);
+  const rootNode = postcss.parse(css);
+  assert.equal(rootNode.nodes.filter((node) => node.type === "atrule" && node.name === "media").length, new Set(rootNode.nodes.filter((node) => node.type === "atrule" && node.name === "media").map((node) => node.params)).size, "one block per breakpoint");
+});

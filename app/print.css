@@ -4,17 +4,19 @@
     --paper: #fff;
     --surface: #fff;
     --surface-strong: #fff;
-    --surface-soft: #f5f5f5;
+    --surface-soft: #f3f0ec;
     --surface-tint: #fff;
     --ink: #111;
     --ink-soft: #222;
     --ink-muted: #555;
     --line: #bbb;
-    --action: #8b231f;
-    --action-strong: #671713;
+    --line-strong: #888;
+    --action: #4e2139;
+    --action-strong: #4e2139;
     --positive: #365c4d;
     --shadow: none;
     --shadow-soft: none;
+    --shadow-lift: none;
   }
 
   @page {
@@ -34,50 +36,58 @@
   .print-brand {
     display: grid;
     gap: 1mm;
-    margin-bottom: 8mm;
-    padding-bottom: 4mm;
+    margin-bottom: 6mm;
+    padding-bottom: 3mm;
     border-bottom: 1px solid var(--line);
   }
 
   .print-brand strong {
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 18pt;
+    font-size: 16pt;
+    font-weight: 600;
   }
 
   .print-brand span {
     color: var(--ink-muted);
     font-size: 9pt;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
   }
 
+  /* Screen-only: status, warnings, navigation, photos and controls. */
+  .skip-link,
+  .storage-warning,
+  .planner-notice,
+  .freshness-warning,
   .site-header,
+  .tonight-card,
   .week-overview,
   .planner-sticky,
   .recipe-controls,
   .recipe-filter-bar,
   .recipe-grid,
+  .empty-search,
   .shopping-tools,
+  .extra-shopping-form,
   .basket-summary,
-  .carry-note,
+  .freshness-panel,
   .site-footer,
   .recipe-actions,
   .meal-rating,
-  .close-recipe,
-  .recipe-reader-toolbar {
+  .recipe-reader-toolbar,
+  .recipe-detail-media,
+  .cooking-mode-hint,
+  .cooking-finish,
+  .recipe-loading,
+  .shopping-item-move {
     display: none !important;
   }
 
   .print-week-heading {
     display: block;
     margin-bottom: 5mm;
-    padding-bottom: 3mm;
-    border-bottom: 1px solid var(--line);
     color: var(--ink);
     font-family: Georgia, "Times New Roman", serif;
-    font-size: 18pt;
-    font-weight: 700;
+    font-size: 16pt;
+    font-weight: 600;
   }
 
   .planner,
@@ -89,10 +99,41 @@
     box-shadow: none;
   }
 
+  /* Dinners: the week's menu as a ruled list. */
+  .print-menu {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .print-menu li {
+    display: grid;
+    grid-template-columns: 50mm minmax(0, 1fr) auto;
+    gap: 4mm;
+    padding: 2.5mm 0;
+    border-bottom: 1px solid var(--line);
+    break-inside: avoid;
+  }
+
+  .print-menu strong {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .print-menu span {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11pt;
+  }
+
+  .print-menu small {
+    color: var(--ink-muted);
+    font-size: 9pt;
+  }
+
+  /* Recipe. */
   .recipe-reader,
-  .recipe-detail,
-  .shopping-layout,
-  .shopping-sections {
+  .recipe-detail {
     display: block !important;
   }
 
@@ -105,13 +146,14 @@
 
   .recipe-detail-header,
   .recipe-detail-body {
-    padding-right: 0;
-    padding-left: 0;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    background: #fff !important;
   }
 
   .recipe-detail-body section,
   .cost-breakdown,
-  .shopping-section {
+  .portion-section {
     break-inside: avoid;
   }
 
@@ -123,26 +165,54 @@
     display: block !important;
   }
 
+  /* Shopping: two columns, price beside the item. */
+  .shopping-layout {
+    display: block !important;
+  }
+
+  .shopping-sections {
+    display: block !important;
+    column-count: 2;
+    column-gap: 8mm;
+  }
+
   .shopping-section {
-    margin-bottom: 8mm;
+    margin-bottom: 5mm;
+    border-radius: 0;
+    break-inside: avoid;
+  }
+
+  .shopping-section h4 {
+    padding: 1.5mm 2mm;
+  }
+
+  .shopping-section ul {
+    padding: 0 2mm;
+  }
+
+  .shopping-item-row {
+    min-height: 0;
+    grid-template-columns: 1fr;
   }
 
   .shopping-item {
     min-height: 0;
-    padding: 5px;
-  }
-
-  .shopping-item-move {
-    display: none !important;
+    grid-template-columns: 5mm minmax(0, 1fr) auto;
+    gap: 2mm;
+    padding: 1.2mm 0;
   }
 
   .shopping-item-name strong {
-    font-size: 11pt;
+    font-size: 10pt;
   }
 
   .shopping-item-name small,
   .shopping-item-price {
     font-size: 9pt;
+  }
+
+  .shopping-item-price {
+    align-self: start;
   }
 
   .shopping-tab-content[hidden],
