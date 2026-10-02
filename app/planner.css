@@ -3289,3 +3289,9 @@
 .cost-breakdown small {
   font-size: var(--text-sm);
 }
+
+.recipe-loading {
+  padding: 40px 0;
+  color: var(--ink-muted);
+  text-align: center;
+}

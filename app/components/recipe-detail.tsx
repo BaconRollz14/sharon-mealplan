@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { memo, useState } from "react";
 import {
   CheckCircle2,
   ChefHat,
@@ -47,7 +47,7 @@ const portionModeNotes: Record<PortionMode, string> = {
   components: "Cook the planned batch, then use the cooked or served weights shown for each component. Any extra stays as spare or leftovers.",
 };
 
-export function RecipeDetail({
+export const RecipeDetail = memo(function RecipeDetail({
   recipe,
   titleId,
   displayDay = recipe.day,
@@ -247,4 +247,4 @@ export function RecipeDetail({
       </div>
     </article>
   );
-}
+});

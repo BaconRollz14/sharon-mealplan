@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowDown,
@@ -37,8 +37,7 @@ import {
 } from "@/components/ui/empty";
 import { cookbook, type Recipe } from "./cookbook-data";
 import { PwaRegister } from "./components/pwa-register";
-import { RecipeDetail } from "./components/recipe-detail";
-import { ShoppingList, type ExtraShoppingItem } from "./components/shopping-list";
+import type { ExtraShoppingItem } from "./components/shopping-list";
 import { ThemeToggle } from "./components/theme-toggle";
 import { WeekSelector } from "./components/week-selector";
 import { getMealImage, handleMealImageError, type MealImage } from "./meal-images";
@@ -62,6 +61,14 @@ import {
   totalMinutes,
   validateCookbook,
 } from "./planner-utils";
+
+// The recipe reader and the shopping list are not needed for the first paint, so they
+// load as separate chunks (prefetched once the page is idle so they also work offline).
+const loadRecipeDetail = () => import("./components/recipe-detail");
+const loadShoppingList = () => import("./components/shopping-list");
+const RecipeDetail = lazy(() => loadRecipeDetail().then((module) => ({ default: module.RecipeDetail })));
+const ShoppingList = lazy(() => loadShoppingList().then((module) => ({ default: module.ShoppingList })));
+const NO_EXTRA_ITEMS: ExtraShoppingItem[] = [];
 
 type PlannerView = "recipes" | "shopping";
 
@@ -333,6 +340,11 @@ export function PlannerClient() {
     methodProgress: Object.fromEntries(Object.entries(methodProgress).map(([key, value]) => [key, [...value]])),
     freshnessLots: Object.fromEntries(Object.entries(freshnessLots).map(([key, value]) => [key, [...value]])),
   }), [activeView, activeWeekIndex, checkedItems, cookedRecipeIds, extraShoppingItems, favouriteRecipeIds, freshnessLots, isDark, mealOrders, mealRatings, methodProgress, selectedRecipeId, shoppingCategories, showRemaining]);
+
+  useEffect(() => {
+    const idle = window.requestIdleCallback ?? ((callback: () => void) => window.setTimeout(callback, 1_500));
+    idle(() => { void loadRecipeDetail(); void loadShoppingList(); });
+  }, []);
 
   useEffect(() => {
     const refreshToday = () => setTodayISO(localTodayISO());
@@ -654,7 +666,7 @@ export function PlannerClient() {
     });
   };
 
-  const toggleSetValue = (
+  const toggleSetValue = useCallback((
     setter: React.Dispatch<React.SetStateAction<Set<string>>>,
     id: string,
     addedMessage: string,
@@ -671,18 +683,18 @@ export function PlannerClient() {
       }
       return next;
     });
-  };
+  }, []);
 
-  const toggleShoppingItem = (key: string) => {
+  const toggleShoppingItem = useCallback((key: string) => {
     setCheckedItems((current) => {
       const next = new Set(current);
       if (next.has(key)) next.delete(key);
       else next.add(key);
       return next;
     });
-  };
+  }, []);
 
-  const clearCheckedForWeek = () => {
+  const clearCheckedForWeek = useCallback(() => {
     const weekKeys = new Set(
       activeWeek.shopping.flatMap((section) =>
         section.items.map((item) => shoppingItemKey(activeWeek.number, section.title, item)),
@@ -695,16 +707,16 @@ export function PlannerClient() {
       return new Set([...current].filter((key) => !weekKeys.has(key)));
     });
     setStatusMessage(`Checked items cleared for Week ${activeWeek.number}.`);
-  };
+  }, [activeWeek, extraShoppingItems]);
 
-  const undoClearChecked = () => {
+  const undoClearChecked = useCallback(() => {
     if (!undoCheckedItems) return;
     setCheckedItems((current) => new Set([...current, ...undoCheckedItems.cleared]));
     setUndoCheckedItems(null);
     setStatusMessage("The checked items are back.");
-  };
+  }, [undoCheckedItems]);
 
-  const moveShoppingItem = (key: string, itemName: string, category: string) => {
+  const moveShoppingItem = useCallback((key: string, itemName: string, category: string) => {
     const originalCategory = shoppingItemOrigins.get(key);
     if (!originalCategory || !shoppingCategoriesByWeek.get(activeWeek.number)?.has(category)) return;
 
@@ -715,17 +727,17 @@ export function PlannerClient() {
       return next;
     });
     setStatusMessage(`${itemName} moved to ${category} and saved to the planner.`);
-  };
+  }, [activeWeek.number]);
 
-  const moveExtraShoppingItem = (id: string, category: string) => {
+  const moveExtraShoppingItem = useCallback((id: string, category: string) => {
     setExtraShoppingItems((current) => ({
       ...current,
       [activeWeek.number]: (current[activeWeek.number] ?? []).map((item) => item.id === id ? { ...item, category } : item),
     }));
     setStatusMessage("Extra shopping item moved and saved to the planner.");
-  };
+  }, [activeWeek.number]);
 
-  const addExtraShoppingItem = (item: Omit<ExtraShoppingItem, "id"> & { id?: string }) => {
+  const addExtraShoppingItem = useCallback((item: Omit<ExtraShoppingItem, "id"> & { id?: string }) => {
     const id = item.id ?? (typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `extra-${Date.now()}`);
     setExtraShoppingItems((current) => {
       const existing = current[activeWeek.number] ?? [];
@@ -733,17 +745,17 @@ export function PlannerClient() {
       return { ...current, [activeWeek.number]: item.id ? existing.map((entry) => entry.id === id ? nextItem : entry) : [...existing, nextItem] };
     });
     setStatusMessage(`${item.name} added to the Week ${activeWeek.number} shop.`);
-  };
+  }, [activeWeek.number]);
 
-  const removeExtraShoppingItem = (id: string) => {
+  const removeExtraShoppingItem = useCallback((id: string) => {
     setExtraShoppingItems((current) => ({
       ...current,
       [activeWeek.number]: (current[activeWeek.number] ?? []).filter((item) => item.id !== id),
     }));
     setStatusMessage("Extra shopping item removed.");
-  };
+  }, [activeWeek.number]);
 
-  const rateMeal = (recipe: Recipe, rating: number) => {
+  const rateMeal = useCallback((recipe: Recipe, rating: number) => {
     if (!Number.isInteger(rating) || rating < 0 || rating > 5) return;
     setMealRatings((current) => {
       const next = { ...current };
@@ -752,9 +764,9 @@ export function PlannerClient() {
       return next;
     });
     setStatusMessage(rating ? `${recipe.name} rated ${rating} out of 5 and saved to the planner.` : `${recipe.name} rating cleared.`);
-  };
+  }, []);
 
-  const storeMealOrder = (nextOrder: string[]) => {
+  const storeMealOrder = useCallback((nextOrder: string[]) => {
     const originalOrder = assignedMeals(activeWeek).map(({ recipe }) => recipe.id);
     setMealOrders((current) => {
       const next = { ...current };
@@ -762,32 +774,32 @@ export function PlannerClient() {
       else next[activeWeekInstanceKey] = nextOrder;
       return next;
     });
-  };
+  }, [activeWeek, activeWeekInstanceKey]);
 
-  const addFreshnessLot = (lot: PurchasedLot) => {
+  const addFreshnessLot = useCallback((lot: PurchasedLot) => {
     setFreshnessLots((current) => ({
       ...current,
       [activeWeekInstanceKey]: [...(current[activeWeekInstanceKey] ?? []), lot],
     }));
     setStatusMessage(`${lot.productName} pack added with a ${lot.useByDate} use-by date.`);
-  };
+  }, [activeWeekInstanceKey]);
 
-  const updateFreshnessLot = (lot: PurchasedLot) => {
+  const updateFreshnessLot = useCallback((lot: PurchasedLot) => {
     setFreshnessLots((current) => ({
       ...current,
       [activeWeekInstanceKey]: (current[activeWeekInstanceKey] ?? []).map((entry) => entry.id === lot.id ? lot : entry),
     }));
-  };
+  }, [activeWeekInstanceKey]);
 
-  const removeFreshnessLot = (lotId: string) => {
+  const removeFreshnessLot = useCallback((lotId: string) => {
     setFreshnessLots((current) => ({
       ...current,
       [activeWeekInstanceKey]: (current[activeWeekInstanceKey] ?? []).filter((lot) => lot.id !== lotId),
     }));
     setStatusMessage("Pack removed.");
-  };
+  }, [activeWeekInstanceKey]);
 
-  const optimiseActiveWeek = () => {
+  const optimiseActiveWeek = useCallback(() => {
     const result = optimiseSchedule({
       week: activeWeek,
       weekStartISO: activeWeekInstanceKey,
@@ -805,7 +817,7 @@ export function PlannerClient() {
     } else {
       setStatusMessage("This week already fits the recorded pack dates.");
     }
-  };
+  }, [activeFreshnessLots, activeOrder, activeWeek, activeWeekInstanceKey, cookedRecipeIds, storeMealOrder]);
 
   const confirmPendingMealMove = () => {
     if (!pendingMealMove) return;
@@ -847,7 +859,7 @@ export function PlannerClient() {
     setStatusMessage(`Week ${activeWeek.number} restored to its original order.`);
   };
 
-  const shareCurrent = async () => {
+  const shareCurrent = useCallback(async () => {
     setShareError("");
     setShareFallbackUrl("");
     const sharingRecipe = activeView === "recipes" && selectedEntry;
@@ -885,16 +897,31 @@ export function PlannerClient() {
         setStatusMessage("The planner link could not be copied.");
       }
     }
-  };
+  }, [activeView, activeWeek.number, selectedEntry]);
 
-  const toggleMethodStep = (recipeId: string, stepIndex: number) => {
+  const toggleMethodStep = useCallback((recipeId: string, stepIndex: number) => {
     setMethodProgress((current) => {
       const steps = new Set(current[recipeId] ?? []);
       if (steps.has(stepIndex)) steps.delete(stepIndex);
       else steps.add(stepIndex);
       return { ...current, [recipeId]: [...steps].sort((a, b) => a - b) };
     });
-  };
+  }, []);
+
+  const selectedRecipe = selectedEntry?.recipe ?? null;
+  const toggleSelectedFavourite = useCallback(() => {
+    if (selectedRecipe) toggleSetValue(setFavouriteRecipeIds, selectedRecipe.id, `${selectedRecipe.name} saved as a favourite.`, `${selectedRecipe.name} removed from favourites.`);
+  }, [selectedRecipe, toggleSetValue]);
+  const toggleSelectedCooked = useCallback(() => {
+    if (selectedRecipe) toggleSetValue(setCookedRecipeIds, selectedRecipe.id, `${selectedRecipe.name} marked as cooked.`, `${selectedRecipe.name} marked as not cooked.`);
+  }, [selectedRecipe, toggleSetValue]);
+  const rateSelected = useCallback((rating: number) => {
+    if (selectedRecipe) rateMeal(selectedRecipe, rating);
+  }, [rateMeal, selectedRecipe]);
+  const toggleSelectedStep = useCallback((stepIndex: number) => {
+    if (selectedRecipe) toggleMethodStep(selectedRecipe.id, stepIndex);
+  }, [selectedRecipe, toggleMethodStep]);
+  const toggleCookingMode = useCallback(() => setCookingMode((mode) => !mode), []);
 
   const printPlanner = () => window.print();
 
@@ -1019,6 +1046,7 @@ export function PlannerClient() {
                     <span>Week {selectedEntry.weekIndex + 1} · {selectedEntry.displayDay} · {readableMealDate(selectedEntry.mealDate)}</span>
                   )}
                 </div>
+                <Suspense fallback={<div className="recipe-loading" role="status">Opening the recipe…</div>}>
                 <RecipeDetail
                   key={selectedEntry.recipe.id}
                   recipe={selectedEntry.recipe}
@@ -1027,15 +1055,16 @@ export function PlannerClient() {
                   isFavourite={favouriteRecipeIds.has(selectedEntry.recipe.id)}
                   isCooked={cookedRecipeIds.has(selectedEntry.recipe.id)}
                   rating={mealRatings[selectedEntry.recipe.id] ?? 0}
-                  onToggleFavourite={() => toggleSetValue(setFavouriteRecipeIds, selectedEntry.recipe.id, `${selectedEntry.recipe.name} saved as a favourite.`, `${selectedEntry.recipe.name} removed from favourites.`)}
-                  onToggleCooked={() => toggleSetValue(setCookedRecipeIds, selectedEntry.recipe.id, `${selectedEntry.recipe.name} marked as cooked.`, `${selectedEntry.recipe.name} marked as not cooked.`)}
-                  onRate={(rating) => rateMeal(selectedEntry.recipe, rating)}
+                  onToggleFavourite={toggleSelectedFavourite}
+                  onToggleCooked={toggleSelectedCooked}
+                  onRate={rateSelected}
                   cookingMode={cookingMode}
                   completedSteps={selectedSteps}
                   screenAwake={screenAwake}
-                  onToggleCookingMode={() => setCookingMode((mode) => !mode)}
-                  onToggleStep={(stepIndex) => toggleMethodStep(selectedEntry.recipe.id, stepIndex)}
+                  onToggleCookingMode={toggleCookingMode}
+                  onToggleStep={toggleSelectedStep}
                 />
+                </Suspense>
               </section>
             ) : (
               <>
@@ -1127,7 +1156,9 @@ export function PlannerClient() {
           </TabsContent>
 
           <TabsContent value="shopping" className="plan-content shopping-tab-content">
-            <ShoppingList key={activeWeekInstanceKey} week={activeWeek} checkedItems={checkedItems} shoppingCategories={shoppingCategories} extraItems={extraShoppingItems[activeWeek.number] ?? []} showRemaining={showRemaining} priceBasis={cookbook.priceBasis} canUndo={Boolean(undoCheckedItems)} onToggleItem={toggleShoppingItem} onMoveItem={moveShoppingItem} onMoveExtraItem={moveExtraShoppingItem} onAddExtraItem={addExtraShoppingItem} onRemoveExtraItem={removeExtraShoppingItem} onClearChecked={clearCheckedForWeek} onUndo={undoClearChecked} onShowRemainingChange={setShowRemaining} weekStartISO={activeWeekInstanceKey} freshnessLots={activeFreshnessLots} freshnessEvaluation={activeFreshnessEvaluation} onAddFreshnessLot={addFreshnessLot} onUpdateFreshnessLot={updateFreshnessLot} onRemoveFreshnessLot={removeFreshnessLot} onOptimiseFreshness={optimiseActiveWeek} onShare={shareCurrent} />
+            <Suspense fallback={<div className="recipe-loading" role="status">Opening the shopping list…</div>}>
+            <ShoppingList key={activeWeekInstanceKey} week={activeWeek} checkedItems={checkedItems} shoppingCategories={shoppingCategories} extraItems={extraShoppingItems[activeWeek.number] ?? NO_EXTRA_ITEMS} showRemaining={showRemaining} priceBasis={cookbook.priceBasis} canUndo={Boolean(undoCheckedItems)} onToggleItem={toggleShoppingItem} onMoveItem={moveShoppingItem} onMoveExtraItem={moveExtraShoppingItem} onAddExtraItem={addExtraShoppingItem} onRemoveExtraItem={removeExtraShoppingItem} onClearChecked={clearCheckedForWeek} onUndo={undoClearChecked} onShowRemainingChange={setShowRemaining} weekStartISO={activeWeekInstanceKey} freshnessLots={activeFreshnessLots} freshnessEvaluation={activeFreshnessEvaluation} onAddFreshnessLot={addFreshnessLot} onUpdateFreshnessLot={updateFreshnessLot} onRemoveFreshnessLot={removeFreshnessLot} onOptimiseFreshness={optimiseActiveWeek} onShare={shareCurrent} />
+            </Suspense>
           </TabsContent>
         </Tabs>
       </section>

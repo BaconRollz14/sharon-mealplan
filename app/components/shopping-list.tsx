@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, memo, useRef, useState } from "react";
 import {
   CirclePoundSterling,
   ListChecks,
@@ -70,7 +70,7 @@ type DisplayItem = {
   isExtra: boolean;
 };
 
-export function ShoppingList({
+export const ShoppingList = memo(function ShoppingList({
   week,
   checkedItems,
   shoppingCategories,
@@ -327,4 +327,4 @@ export function ShoppingList({
       />
     </div>
   );
-}
+});
