@@ -850,5 +850,5 @@ test("makes reordering visible, cooking full-screen and whole aisles tickable", 
   assert.match(plannerSource, /planner-shell\$\{cookingMode && selectedEntry \? " is-cooking" : ""\}/);
   assert.match(plannerSource, />Exit cooking</);
   assert.match(css, /\.planner-shell\.is-cooking \.recipe-detail-media/);
-  assert.equal(finalRuleDeclarations(css, ".week-tabs-list", "(max-width: 780px)")?.["grid-template-columns"], "repeat(4, minmax(0, 1fr))");
+  assert.equal(finalRuleDeclarations(css, ".week-tabs-list", "(max-width: 780px)")?.["grid-template-columns"], "repeat(auto-fit, minmax(4.25em, 1fr))", "one row normally, wrapping at large text sizes");
 });

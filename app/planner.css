@@ -633,31 +633,8 @@
   gap: 7px;
 }
 
-.portion-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  margin-bottom: 9px;
-}
-
 .portion-heading h4 {
   margin-bottom: 0;
-}
-
-.portion-mode {
-  display: inline-flex;
-  min-height: 24px;
-  align-items: center;
-  padding: 3px 8px;
-  border: 1px solid color-mix(in srgb, var(--action) 32%, var(--line));
-  border-radius: 999px;
-  background: var(--surface-tint);
-  color: var(--action-strong);
-  font-size: var(--text-sm);
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  white-space: nowrap;
 }
 
 .portion-rule {
@@ -1464,8 +1441,9 @@
 
 .brand-mark {
   display: inline-grid;
-  width: 40px;
-  height: 40px;
+  flex: 0 0 auto;
+  width: 2.7em;
+  height: 2.7em;
   place-items: center;
   color: var(--brand-mark-ink);
   font-family: Georgia, "Times New Roman", serif;
@@ -2763,10 +2741,48 @@
   min-width: 0;
 }
 
+/* Focus rings drawn inside controls whose parents clip overflow. */
+.meal-card:focus-visible,
+.basket-summary-toggle:focus-visible,
+.cost-breakdown > summary:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: -3px;
+}
+
+.basket-summary-toggle:focus-visible {
+  outline-color: var(--inverse-accent);
+}
+
+/* Large text: portion heading and week prices wrap cleanly; the brand mark scales with text. */
+.portion-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 9px;
+  flex-wrap: wrap;
+}
+
+.portion-mode {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+  padding: 3px 8px;
+  border: 1px solid color-mix(in srgb, var(--action) 32%, var(--line));
+  border-radius: 999px;
+  background: var(--surface-tint);
+  color: var(--action-strong);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: normal;
+}
+
 .week-tab > small {
   font-size: var(--text-sm);
   font-weight: 600;
   overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 @media (min-width: 781px) {
@@ -3221,7 +3237,7 @@
   }
   .week-tabs-list {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(4.25em, 1fr));
   }
 
   .week-tab {

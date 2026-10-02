@@ -2,6 +2,7 @@
   /* html:root beats the screen theme blocks, which load after this file. */
   html:root,
   html:root[data-theme] {
+    color-scheme: light;
     --paper: #fff;
     --surface: #fff;
     --surface-strong: #fff;
