@@ -512,6 +512,24 @@ export function PlannerClient() {
   }, [cookingMode, selectedRecipeId]);
 
   useEffect(() => {
+    // Entering cooking mode lands on the step to do next, not on the photo.
+    if (!cookingMode || !selectedRecipeId) return;
+    let frame = 0;
+    let attempts = 0;
+    const land = () => {
+      const step = document.querySelector<HTMLElement>(".method-list li.is-next, .cooking-finish");
+      if (!step) {
+        if (attempts++ < 30) frame = window.requestAnimationFrame(land);
+        return;
+      }
+      step.scrollIntoView({ block: "center" });
+      step.querySelector<HTMLInputElement>("input")?.focus({ preventScroll: true });
+    };
+    frame = window.requestAnimationFrame(() => { frame = window.requestAnimationFrame(land); });
+    return () => window.cancelAnimationFrame(frame);
+  }, [cookingMode, selectedRecipeId]);
+
+  useEffect(() => {
     if (!pendingMealMove) return;
     const frame = window.requestAnimationFrame(() => pendingMoveFirstActionRef.current?.focus());
     return () => window.cancelAnimationFrame(frame);
