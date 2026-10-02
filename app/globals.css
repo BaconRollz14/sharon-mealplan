@@ -60,6 +60,13 @@
   --focus-ring: #2d2025;
   --selection-ink: var(--ink);
   --radius: 0.75rem;
+  /* Five-step type scale; nothing on screen is smaller than --text-sm. These names
+     deliberately match Tailwind's, so the UI-kit text-* utilities land on the same steps. */
+  --text-sm: 0.8125rem;
+  --text-md: 0.9375rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 2rem;
 }
 
 :root[data-theme="dark"] {

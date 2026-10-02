@@ -11,8 +11,8 @@
   transform: translate(-50%, -180%);
   background: var(--action);
   color: var(--primary-foreground);
-  font-size: 0.875rem;
-  font-weight: 800;
+  font-size: var(--text-md);
+  font-weight: 600;
   text-decoration: none;
   transition: transform 160ms ease;
 }
@@ -32,7 +32,7 @@
   border: 1px solid var(--destructive);
   background: var(--surface-tint);
   color: var(--ink);
-  font-size: 0.84rem;
+  font-size: var(--text-sm);
   flex-wrap: wrap;
 }
 
@@ -55,8 +55,8 @@
   padding: 9px 14px;
   border: 1px solid transparent;
   color: var(--ink-muted);
-  font-size: 0.84rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
   box-shadow: none;
   min-height: 44px;
   border-radius: 0;
@@ -71,7 +71,7 @@
   border: 0;
   background: var(--destructive);
   color: var(--surface-strong);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .header-actions,
@@ -92,8 +92,8 @@
 
 .theme-control-label {
   color: var(--ink-muted);
-  font-size: 0.8rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .theme-switch {
@@ -183,8 +183,8 @@
   gap: 7px;
   border: 1px solid transparent;
   border-radius: 999px;
-  font-size: 0.84rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
   line-height: 1;
   text-decoration: none;
   transition: transform 150ms ease, background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
@@ -234,13 +234,13 @@
 }
 
 .week-tab > span {
-  font-size: 0.78rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .week-tab > small {
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
   .planner-heading,
@@ -281,16 +281,16 @@
 
 .weekly-cost span {
   color: var(--ink-muted);
-  font-size: 0.75rem;
-  font-weight: 750;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .weekly-cost strong {
   color: var(--action);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.55rem;
-  letter-spacing: -0.05em;
+  font-family: inherit;
+  font-size: var(--text-lg);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .search-field {
@@ -327,7 +327,7 @@
   background: transparent;
   box-shadow: none;
   color: var(--ink);
-  font-size: 0.88rem;
+  font-size: var(--text-md);
 }
 
 .search-field input::placeholder {
@@ -368,16 +368,16 @@
 .meal-day,
 .recipe-day-label {
   color: var(--action);
-  font-size: 0.73rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
 
 .meal-day-date {
   color: var(--ink-muted);
-  font-size: 0.92em;
-  font-weight: 700;
+  font-size: inherit;
+  font-weight: 600;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -400,8 +400,8 @@
   border-radius: 50%;
   background: var(--positive);
   color: var(--surface);
-  font-size: 0.72rem;
-  font-weight: 900;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .meal-chevron {
@@ -413,15 +413,16 @@
   display: grid;
   justify-items: end;
   color: var(--action-strong);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
 }
 
 .meal-meta strong small {
   color: var(--ink-muted);
   font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.7rem;
-  font-weight: 750;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .reorder-controls {
@@ -436,7 +437,7 @@
   border-radius: 11px;
   background: var(--surface-soft);
   color: var(--ink-muted);
-  font-size: 0.76rem;
+  font-size: var(--text-sm);
 }
 
 .recipe-detail {
@@ -461,9 +462,9 @@
   padding-right: 54px;
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.78rem;
-  font-weight: 700;
-  letter-spacing: -0.05em;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -471,7 +472,7 @@
   max-width: 390px;
   margin: 0;
   color: var(--ink-muted);
-  font-size: 0.86rem;
+  font-size: var(--text-md);
   line-height: 1.48;
 }
 
@@ -486,16 +487,17 @@
   border-radius: 12px;
   background: color-mix(in srgb, var(--surface) 80%, transparent);
   color: var(--action-strong);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: var(--text-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .recipe-cost small {
   color: var(--ink-muted);
   font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 750;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .recipe-actions {
@@ -511,7 +513,7 @@
   border-color: var(--line);
   background: color-mix(in srgb, var(--surface) 78%, transparent);
   color: var(--ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
 }
 
 .recipe-actions button.is-active {
@@ -542,8 +544,8 @@
   align-items: center;
   gap: 4px;
   color: var(--ink-muted);
-  font-size: 0.7rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -557,9 +559,10 @@
 .recipe-stats dd {
   margin: 4px 0 0;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 0.92rem;
-  font-weight: 700;
+  font-family: inherit;
+  font-size: var(--text-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .recipe-detail-body {
@@ -571,8 +574,8 @@
 .recipe-detail-body h4 {
   margin: 0 0 9px;
   color: var(--ink);
-  font-size: 0.76rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.09em;
   text-transform: uppercase;
 }
@@ -594,7 +597,7 @@
   position: relative;
   padding-left: 13px;
   color: var(--ink-soft);
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   line-height: 1.38;
 }
 
@@ -621,7 +624,7 @@
   min-height: 24px;
   padding-left: 32px;
   color: var(--ink-soft);
-  font-size: 0.83rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
@@ -638,8 +641,8 @@
   color: var(--action-strong);
   content: counter(steps);
   counter-increment: steps;
-  font-size: 0.72rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .portion-grid {
@@ -668,8 +671,8 @@
   border-radius: 999px;
   background: var(--surface-tint);
   color: var(--action-strong);
-  font-size: 0.67rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
@@ -696,7 +699,7 @@
 
 .portion-rule p {
   margin: 0;
-  font-size: 0.76rem;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 
@@ -713,19 +716,19 @@
 
 .portion-grid strong {
   color: var(--action-strong);
-  font-size: 0.76rem;
+  font-size: var(--text-sm);
 }
 
 .portion-grid span {
   color: var(--ink-soft);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   line-height: 1.42;
 }
 
 .calorie-note {
   margin: 8px 0 0;
   color: var(--ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
   line-height: 1.42;
 }
 
@@ -746,8 +749,8 @@
   color: var(--ink);
   cursor: pointer;
   list-style: none;
-  font-size: 0.79rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .cost-breakdown > summary::-webkit-details-marker {
@@ -768,8 +771,9 @@
 
 .cost-breakdown > summary strong {
   color: var(--action-strong);
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1rem;
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
 }
 
 .cost-breakdown-content {
@@ -789,7 +793,7 @@
   table-layout: fixed;
   border-collapse: collapse;
   color: var(--ink-soft);
-  font-size: 0.72rem;
+  font-size: var(--text-sm);
 }
 
 .cost-breakdown th:nth-child(1) { width: 37%; }
@@ -800,6 +804,7 @@
 
 .cost-breakdown th,
 .cost-breakdown td {
+  font-weight: 400;
   padding: 8px 9px;
   border-bottom: 1px solid var(--line);
   text-align: left;
@@ -810,14 +815,15 @@
 .cost-breakdown thead th {
   background: var(--surface-tint);
   color: var(--ink-muted);
-  font-size: 0.72rem;
+  font-size: var(--text-sm);
   letter-spacing: 0.04em;
   text-transform: uppercase;
+  font-weight: 600;
 }
 
 .cost-breakdown tbody th {
   width: 38%;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .cost-breakdown tbody th strong,
@@ -829,22 +835,22 @@
 .cost-breakdown tbody th small {
   margin-top: 2px;
   color: var(--ink-muted);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .cost-breakdown tbody th em {
   max-width: 340px;
   margin-top: 4px;
   color: var(--ink-muted);
-  font-size: 0.72rem;
-  font-weight: 500;
+  font-size: var(--text-sm);
+  font-weight: 400;
   line-height: 1.35;
 }
 
 .cost-breakdown tbody td:last-child,
 .cost-breakdown tfoot td {
   color: var(--action-strong);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .cost-breakdown tfoot th,
@@ -857,7 +863,7 @@
 .cost-method-note {
   margin: 9px 2px 0;
   color: var(--ink-muted);
-  font-size: 0.72rem;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 
@@ -886,13 +892,13 @@
 
 .cook-note strong {
   display: block;
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 .cook-note p {
   margin: 4px 0 0;
   color: inherit;
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
@@ -919,8 +925,8 @@
   align-items: center;
   gap: 9px;
   color: var(--ink-muted);
-  font-size: 0.8rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .shopping-section {
@@ -936,8 +942,8 @@
   border-bottom: 1px solid var(--line-strong);
   background: var(--surface-soft);
   color: var(--ink);
-  font-size: 0.78rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
@@ -949,8 +955,8 @@
 }
 
 .meal-rating > span {
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .meal-rating-stars {
@@ -1040,8 +1046,8 @@
 .shopping-item-price.is-carried {
   color: var(--positive);
   font-family: ui-sans-serif, system-ui, sans-serif;
-  font-size: 0.72rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }
@@ -1070,7 +1076,7 @@
 
 .shopping-complete p {
   margin: 3px 0 0;
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
 }
 
 .basket-summary > summary {
@@ -1089,13 +1095,13 @@
 }
 
 .basket-summary > summary span {
-  font-size: 0.82rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .basket-summary > summary strong {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.25rem;
+  font-size: var(--text-lg);
 }
 
 .summary-icon {
@@ -1115,16 +1121,16 @@
 
 .basket-summary-details > strong {
   margin-top: -5px;
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 2.35rem;
-  letter-spacing: -0.06em;
+  font-family: inherit;
+  font-size: var(--text-xl);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .basket-summary-details > p {
   margin: 1px 0 3px;
   color: color-mix(in srgb, var(--inverse-ink) 70%, transparent);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 
@@ -1139,8 +1145,8 @@
   align-items: center;
   gap: 7px;
   color: color-mix(in srgb, var(--inverse-ink) 84%, transparent);
-  font-size: 0.78rem;
-  font-weight: 700;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .basket-summary-details > span svg {
@@ -1155,7 +1161,7 @@
   padding-top: 12px;
   border-top: 1px solid color-mix(in srgb, var(--inverse-ink) 15%, transparent);
   color: color-mix(in srgb, var(--inverse-ink) 60%, transparent);
-  font-size: 0.72rem;
+  font-size: var(--text-sm);
   line-height: 1.45;
 }
 
@@ -1199,7 +1205,7 @@
 
 .recipe-reader-toolbar > span {
   color: var(--ink-muted);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
   font-weight: 600;
   letter-spacing: 0.035em;
   text-align: right;
@@ -1218,13 +1224,13 @@
 .recipe-reader .recipe-detail-header h3 {
   max-width: 900px;
   padding-right: 130px;
-  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-size: var(--text-xl);
   line-height: 1.02;
 }
 
 .recipe-reader .recipe-detail-header > p {
   max-width: 760px;
-  font-size: 1rem;
+  font-size: var(--text-base);
 }
 
 .recipe-reader .recipe-cost {
@@ -1250,11 +1256,11 @@
 }
 
 .recipe-reader .recipe-detail-body h4 {
-  font-size: 0.86rem;
+  font-size: var(--text-md);
 }
 
 .recipe-reader :is(.ingredients-list li, .method-list li) {
-  font-size: 0.96rem;
+  font-size: var(--text-md);
 }
 
 @media (max-width: 1080px) {
@@ -1317,8 +1323,8 @@
   .cost-breakdown tbody td::before {
     color: var(--ink-muted);
     content: attr(data-label);
-    font-size: 0.68rem;
-    font-weight: 800;
+    font-size: var(--text-sm);
+    font-weight: 600;
     letter-spacing: 0.03em;
     text-transform: uppercase;
   }
@@ -1426,7 +1432,7 @@
 .cycle-date-range {
   margin: 6px 0 0;
   color: var(--ink-muted);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
   font-variant-numeric: tabular-nums;
 }
 
@@ -1438,8 +1444,8 @@
   border: 1px solid var(--action);
   border-radius: 999px;
   color: var(--action-strong);
-  font-size: 0.6rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1484,8 +1490,8 @@
 }
 
 .shopping-item-move span {
-  font-weight: 800;
-  font-size: 0.78rem;
+  font-weight: 600;
+  font-size: var(--text-sm);
 }
 
 .shopping-item-row {
@@ -1505,8 +1511,8 @@
   border-radius: 999px;
   background: var(--highlight-soft);
   color: var(--action-strong);
-  font-size: 0.62rem;
-  font-weight: 850;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1527,13 +1533,14 @@
 }
 
 .basket-summary-toggle span {
-  font-size: 0.86rem;
-  font-weight: 800;
+  font-size: var(--text-md);
+  font-weight: 600;
 }
 
 .basket-summary-toggle strong {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.25rem;
+  font-family: inherit;
+  font-size: var(--text-lg);
+  font-variant-numeric: tabular-nums;
 }
 
 .basket-summary-details {
@@ -1563,15 +1570,15 @@
 
 .extra-shopping-form-heading span {
   color: var(--ink-muted);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 .extra-shopping-form label {
   display: grid;
   gap: 5px;
   color: var(--ink-muted);
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -1654,7 +1661,7 @@
   gap: 7px;
   margin: 10px 0 0;
   color: var(--ink-muted);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 .cooking-mode-hint svg {
@@ -1705,7 +1712,7 @@
 @media (max-width: 430px) {
 
   .shopping-item-name strong {
-    font-size: 0.98rem;
+    font-size: var(--text-base);
   }
 
   .shopping-item-move span {
@@ -1747,9 +1754,9 @@
   place-items: center;
   color: var(--brand-mark-ink);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: -0.06em;
+  font-size: var(--text-md);
+  font-weight: 600;
+  letter-spacing: -0.02em;
   border-radius: 10px 16px 10px 16px;
   background: var(--brand-mark-bg);
   box-shadow: none;
@@ -1829,7 +1836,7 @@
   gap: 24px;
   padding: 27px 4px 4px;
   color: var(--ink-muted);
-  font-size: 0.76rem;
+  font-size: var(--text-sm);
   line-height: 1.48;
   margin-top: 18px;
   border-top: 1px solid var(--line);
@@ -1913,17 +1920,17 @@
   margin: 0;
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.02;
-  letter-spacing: -0.05em;
-  font-size: clamp(1.65rem, 2.5vw, 2.2rem);
+  letter-spacing: -0.02em;
+  font-size: var(--text-xl);
 }
 
 .week-caption {
   margin: 5px 0 0;
   color: var(--ink-muted);
   max-width: 650px;
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 .plan-toolbar {
@@ -1944,7 +1951,7 @@
   margin: 0;
   color: var(--ink-muted);
   overflow-wrap: anywhere;
-  font-size: 0.86rem;
+  font-size: var(--text-md);
 }
 
 .recipe-grid {
@@ -1957,11 +1964,11 @@
 
 .meal-card-title {
   font-family: Georgia, "Times New Roman", serif;
-  font-weight: 700;
-  letter-spacing: -0.025em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
   margin-top: 16px;
   line-height: 1.08;
-  font-size: 1.2rem;
+  font-size: var(--text-lg);
 }
 
 .meal-rating-stars button {
@@ -2007,9 +2014,9 @@
 }
 
 .shopping-item-name strong {
-  font-weight: 750;
+  font-weight: 600;
   white-space: normal;
-  font-size: 0.94rem;
+  font-size: var(--text-md);
   line-height: 1.3;
   overflow-wrap: anywhere;
 }
@@ -2017,16 +2024,17 @@
 .shopping-item-name small {
   color: var(--ink-muted);
   line-height: 1.25;
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
 }
 
 .shopping-item-price {
   white-space: nowrap;
   color: var(--action-strong);
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 700;
+  font-family: inherit;
+  font-weight: 600;
   align-self: end;
-  font-size: 0.98rem;
+  font-size: var(--text-base);
+  font-variant-numeric: tabular-nums;
 }
 
 .shopping-item-move {
@@ -2065,17 +2073,17 @@
   border-radius: 7px;
   background: transparent;
   color: var(--ink-muted);
-  font-weight: 800;
+  font-weight: 600;
   cursor: pointer;
   min-height: 44px;
   padding: 6px 10px;
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 .summary-warning,
 .form-error {
   color: var(--action-strong);
-  font-weight: 750;
+  font-weight: 600;
 }
 
 .share-fallback-url {
@@ -2088,7 +2096,7 @@
   border-radius: 6px;
   background: var(--surface-strong);
   color: var(--ink);
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 @media (max-width: 1180px) {
@@ -2124,7 +2132,7 @@
   }
 
   .planner-heading h2 {
-    font-size: 1.62rem;
+    font-size: var(--text-lg);
   }
 
   .toolbar-actions .weekly-cost {
@@ -2132,16 +2140,16 @@
   }
 
   .weekly-cost strong {
-    font-size: 1.25rem;
+    font-size: var(--text-lg);
   }
 
   .extra-shopping-form input,
   .extra-shopping-form select {
-    font-size: 1rem;
+    font-size: var(--text-base);
   }
 
   .search-field input {
-    font-size: 1rem;
+    font-size: var(--text-base);
   }
 }
 .recipe-filter-bar:empty {
@@ -2175,9 +2183,9 @@
 }
 
 .meal-card-description {
-
   color: var(--ink-muted);
-  font-size: 0.84rem;
+  font-size: var(--text-md);
+  font-weight: 400;
   display: -webkit-box;
   max-width: 48ch;
   margin-top: 8px;
@@ -2235,8 +2243,8 @@
   margin-top: auto;
 
   color: var(--ink-muted);
-  font-size: 0.78rem;
-  font-weight: 750;
+  font-size: var(--text-sm);
+  font-weight: 600;
   align-items: end;
   padding-top: 12px;
 }
@@ -2251,7 +2259,7 @@
 }
 
 .recipe-detail-header .meal-rating-interactive .meal-rating-label {
-  font-size: 0.78rem;
+  font-size: var(--text-sm);
 }
 
 .recipe-detail-header .meal-rating-interactive .meal-rating-stars button {
@@ -2344,7 +2352,7 @@
   }
 
   .planner-heading h2 {
-    font-size: clamp(1.55rem, 7vw, 1.9rem);
+    font-size: var(--text-xl);
   }
 
   .plan-toolbar {
@@ -2399,12 +2407,12 @@
 
   .meal-card-title {
     margin-top: 7px;
-    font-size: 1.2rem;
+    font-size: var(--text-lg);
   }
 
   .meal-card-description {
     margin-top: 6px;
-    font-size: 0.84rem;
+    font-size: var(--text-sm);
     -webkit-line-clamp: 3;
   }
 
@@ -2466,7 +2474,7 @@
 .freshness-warning p {
   margin: 3px 0 0;
   color: var(--ink-muted);
-  font-size: 0.84rem;
+  font-size: var(--text-sm);
 }
 
 .freshness-warning-actions {
@@ -2483,7 +2491,7 @@
   border-radius: 10px;
   background: transparent;
   color: var(--ink-muted);
-  font-weight: 750;
+  font-weight: 600;
 }
 
 .freshness-add {
@@ -2493,8 +2501,8 @@
 .freshness-week-note {
   margin: 0;
   color: var(--ink-muted);
-  font-size: 0.74rem;
-  font-weight: 750;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .freshness-form {
@@ -2517,16 +2525,16 @@
   display: grid;
   gap: 5px;
   color: var(--ink-muted);
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 .freshness-form label span {
   margin-top: -29px;
   margin-right: 10px;
   color: var(--ink-muted);
-  font-size: 0.72rem;
-  font-weight: 800;
+  font-size: var(--text-sm);
+  font-weight: 600;
   pointer-events: none;
   text-align: right;
 }
@@ -2541,7 +2549,7 @@
   border-radius: 9px;
   background: var(--surface);
   color: var(--ink);
-  font-size: 1rem;
+  font-size: var(--text-base);
 }
 
 .freshness-form input:focus-visible,
@@ -2582,12 +2590,12 @@
 }
 
 .freshness-lot-title strong {
-  font-size: 0.84rem;
+  font-size: var(--text-sm);
 }
 
 .freshness-lot-title span {
   color: var(--ink-muted);
-  font-size: 0.75rem;
+  font-size: var(--text-sm);
 }
 
 .freshness-remove {
@@ -2626,7 +2634,7 @@
 .freshness-actions span,
 .freshness-missing {
   color: var(--ink-muted);
-  font-size: 0.77rem;
+  font-size: var(--text-sm);
 }
 
 .freshness-issues {
@@ -2635,7 +2643,7 @@
   border-radius: 10px;
   background: var(--highlight-soft);
   color: var(--ink);
-  font-size: 0.8rem;
+  font-size: var(--text-sm);
 }
 
 .freshness-issues ul {
@@ -2705,8 +2713,8 @@
   border-radius: 8px;
   color: var(--ink);
   cursor: pointer;
-  font-size: 0.84rem;
-  font-weight: 750;
+  font-size: var(--text-sm);
+  font-weight: 600;
 }
 
 [data-slot="dropdown-menu-item"] svg {
@@ -2741,7 +2749,7 @@
   margin: 0;
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
   font-weight: 600;
   letter-spacing: -0.01em;
   line-height: 1.2;
@@ -2796,7 +2804,7 @@
 .tonight-card h2 {
   margin: 0;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.9rem, 3.2vw, 2.75rem);
+  font-size: var(--text-xl);
   font-weight: 600;
   letter-spacing: -0.02em;
   line-height: 1.05;
@@ -2807,7 +2815,7 @@
   display: block;
   margin-bottom: 6px;
   color: var(--inverse-accent);
-  font-size: 0.55em;
+  font-size: var(--text-lg);
   font-style: italic;
   letter-spacing: 0;
 }
@@ -2815,7 +2823,7 @@
 .tonight-meta {
   margin: 0;
   color: color-mix(in srgb, var(--inverse-ink) 84%, var(--inverse-surface));
-  font-size: 0.95rem;
+  font-size: var(--text-md);
 }
 
 .tonight-done {
@@ -2882,7 +2890,7 @@
 .shopping-progress {
   margin: 0 auto 0 0;
   color: var(--positive);
-  font-size: 0.875rem;
+  font-size: var(--text-md);
   font-weight: 600;
 }
 
@@ -2972,7 +2980,7 @@
   max-width: 700px;
   margin: 0;
   color: var(--ink-muted);
-  font-size: 0.83rem;
+  font-size: var(--text-sm);
 }
 
 @media (max-width: 780px) {
@@ -3029,14 +3037,14 @@
 /* Adapt: phones keep full names, labelled controls and room to wrap. */
 .week-tab > strong {
   max-width: 100%;
-  font-size: 0.82rem;
+  font-size: var(--text-sm);
   overflow-wrap: anywhere;
 }
 
 .recipe-reader-toolbar > .cooking-progress {
   flex: 1 1 auto;
   color: var(--ink);
-  font-size: 1rem;
+  font-size: var(--text-base);
   font-weight: 600;
   letter-spacing: 0;
   text-align: center;
@@ -3058,13 +3066,13 @@
 }
 
 .recipe-reader .recipe-detail.is-cooking .method-list li {
-  font-size: 1.25rem;
+  font-size: var(--text-lg);
   line-height: 1.5;
 }
 
 .recipe-reader .recipe-detail.is-cooking .ingredients-list li {
   padding-left: 0;
-  font-size: 1.0625rem;
+  font-size: var(--text-base);
 }
 
 .ingredients-list.is-cooking-mode li::before {
@@ -3117,7 +3125,7 @@
   display: block;
   margin-bottom: 2px;
   color: var(--ink-muted);
-  font-size: 0.8125rem;
+  font-size: var(--text-sm);
   font-weight: 600;
 }
 
@@ -3145,7 +3153,7 @@
 
 .cooking-finish > strong {
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.5rem;
+  font-size: var(--text-xl);
   font-weight: 600;
   line-height: 1.1;
 }
@@ -3217,7 +3225,7 @@
   .recipe-reader .recipe-detail-header h3 {
     max-width: none;
     padding: 0;
-    font-size: 1.6rem;
+    font-size: var(--text-lg);
   }
 
   .recipe-actions button {
@@ -3255,7 +3263,7 @@
 }
 
 .recipe-reader .recipe-detail.is-cooking .method-list li.is-complete {
-  font-size: 1rem;
+  font-size: var(--text-base);
 }
 
 @media (max-width: 780px) {
@@ -3270,4 +3278,14 @@
   height: 20px;
   margin: 0 6px -4px 0;
   color: var(--highlight-strong);
+}
+
+/* UI-kit primitives ship at weight 500; the system uses 400 and 600 only. */
+[data-slot="empty-title"],
+[data-slot="dropdown-menu-label"] {
+  font-weight: 600;
+}
+
+.cost-breakdown small {
+  font-size: var(--text-sm);
 }
